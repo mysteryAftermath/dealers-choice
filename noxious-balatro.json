@@ -1,0 +1,13 @@
+{
+    "id": "NOXIOUS",
+    "name": "Noxious Balatro",
+    "author": ["escapeRoute42", "NOX"],
+    "description": "",
+    "prefix": "nox",
+    "main_file": "noxious-balatro.lua",
+    "badge_colour": "0b77ea",
+    "dependencies": [
+        "Steamodded (>=1.0.0~ALPHA-1225a)"
+    ],
+    "version": "0.0.1"
+}
