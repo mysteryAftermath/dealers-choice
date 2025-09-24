@@ -8,7 +8,10 @@ SMODS.Atlas {
 	-- Height of each sprite in 1x size
 	py = 95
 }
-
+--[[ Turnabout Joker
+	When Small Blind or Big Blind is defeated,
+	gain any remaining hands when selecting next blind
+]]
 SMODS.Joker {
 	key = 'turnabout',
 	loc_txt = {
