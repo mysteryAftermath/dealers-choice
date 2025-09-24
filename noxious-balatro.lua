@@ -8,7 +8,50 @@ SMODS.Atlas {
 	-- Height of each sprite in 1x size
 	py = 95
 }
---[[ Turnabout Joker
+
+-- Jokers
+
+---- Common Jokers
+
+--[[ Flash Paper
+	Sell this card to Draw 5
+	Cards from your deck
+]]
+SMODS.Joker {
+	key = 'flashpaper',
+	loc_txt = {
+		name = 'Flash Paper',
+		text = {
+			"Sell this card to {C:attention}Draw #1#{}", 
+			"Cards from your deck"
+		}
+	},
+	config = { extra = { cards = 5 } },
+	rarity = 1,
+	atlas = 'noxious-balatro',
+	pos = { x = 0, y = 0 },
+	cost = 3,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.cards } }
+	end,
+	calculate = function(self, card, context)
+		if context.selling_self and G.hand and #G.hand.cards >= 1 then
+			SMODS.draw_cards(card.ability.extra.cards)
+			return {
+				message = 'Burned!',
+				colour = G.C.FILTER,
+				cardarea = G.jokers,
+				selling_card = true,
+				card = card
+			}
+		end
+	end
+}
+
+---- Rare Jokers
+
+--[[ Turnabout
 	When Small Blind or Big Blind is defeated,
 	gain any remaining hands when selecting next blind
 ]]
