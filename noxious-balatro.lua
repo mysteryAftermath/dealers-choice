@@ -49,6 +49,43 @@ SMODS.Joker {
 	end
 }
 
+---- Uncommon Jokers
+
+--[[ Orange Juicer
+	When discarding, draw an additional card.
+]]
+SMODS.Joker {
+	key = 'ojuicer',
+	loc_txt = {
+		name = 'Orange Juicer',
+		text = {
+			"When discarding, draw an additional card"
+		}
+	},
+	config = { extra = { cards = 1 }, active = nil },
+	rarity = 2,
+	atlas = 'noxious-balatro',
+	pos = { x = 0, y = 0 },
+	cost = 5,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.cards, card.ability.trigger } }
+	end,
+	calculate = function(self, card, context)
+		if context.pre_discard then card.ability.active = true end
+
+		if context.drawing_cards and card.ability.active then
+			card.ability.active = nil
+			return {
+				cards_to_draw = context.amount + card.ability.extra.cards,
+				message = 'No Pulp!',
+				colour = G.C.FILTER,
+				card = card
+			}
+		end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
