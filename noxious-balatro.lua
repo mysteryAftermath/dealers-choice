@@ -75,13 +75,13 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 		if context.pre_discard then
 			card.ability.active = true
-			card.ability.extra.cards = math.min(#G.hand.highlighted - (G.hand.config.card_limit - (#G.hand.cards - #G.hand.highlighted)), #G.hand.highlighted) + 1
+			card.ability.extra.cards = #G.hand.highlighted + 1
 			end
 
 		if context.drawing_cards and card.ability.active then
 			card.ability.active = nil
 			return {
-				cards_to_draw = context.amount + card.ability.extra.cards,
+				cards_to_draw = card.ability.extra.cards,
 				message = 'No Pulp!',
 				colour = G.C.FILTER,
 				card = card
