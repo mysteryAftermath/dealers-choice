@@ -9,6 +9,16 @@ SMODS.Atlas {
 	py = 95
 }
 
+SMODS.current_mod.optional_features = {
+    retrigger_joker = true,
+    post_trigger = true,
+    quantum_enhancements = true,
+    cardareas = {
+        discard = true,
+        deck = true
+    }
+}
+
 -- Jokers
 
 ---- Common Jokers
@@ -44,6 +54,72 @@ SMODS.Joker {
 				cardarea = G.jokers,
 				selling_card = true,
 				card = card
+			}
+		end
+	end
+}
+
+--[[ Salt
+	+2 Mult every time any
+	other joker is triggered
+	(Ignores Salt and Pepper)
+]]
+SMODS.Joker {
+	key = 'salt',
+	loc_txt = {
+		name = 'Salt',
+		text = {
+			"{C:mult}+2{} Mult every time any",
+			"other {C:attention}Joker{} is triggered",
+			"{s:0.8}Ignores Salt and Pepper"
+		}
+	},
+	config = { extra = { mult = 2 } },
+	rarity = 1,
+	atlas = 'noxious-balatro',
+	pos = { x = 0, y = 0 },
+	cost = 3,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.mult } }
+	end,
+	calculate = function(self, card, context)
+		if context.post_trigger and context.cardarea == G.jokers then
+			return {
+				mult = card.ability.extra.mult
+			}
+		end
+	end
+}
+
+--[[ Pepper
+	+15 Chips every time any
+	other joker is triggered
+	(Ignores Salt and Pepper)
+]]
+SMODS.Joker {
+	key = 'pepper',
+	loc_txt = {
+		name = 'Pepper',
+		text = {
+			"{C:chips}+15{} Chips every time any",
+			"other {C:attention}Joker{} is triggered",
+			"{s:0.8}Ignores Salt and Pepper"
+		}
+	},
+	config = { extra = { chips = 15 } },
+	rarity = 1,
+	atlas = 'noxious-balatro',
+	pos = { x = 0, y = 0 },
+	cost = 3,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.chips } }
+	end,
+	calculate = function(self, card, context)
+		if context.post_trigger and context.cardarea == G.jokers then
+			return {
+				chips = card.ability.extra.chips
 			}
 		end
 	end
