@@ -59,10 +59,11 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Orange Juicer',
 		text = {
-			"When discarding, draw an additional card"
+			"When discarding, always {C:attention}Draw{}",
+			"1 more card than was discarded"
 		}
 	},
-	config = { extra = { cards = 1 }, active = nil },
+	config = { extra = { cards = 0 }, active = nil },
 	rarity = 2,
 	atlas = 'noxious-balatro',
 	pos = { x = 0, y = 0 },
@@ -72,7 +73,10 @@ SMODS.Joker {
 		return { vars = { card.ability.extra.cards, card.ability.trigger } }
 	end,
 	calculate = function(self, card, context)
-		if context.pre_discard then card.ability.active = true end
+		if context.pre_discard then
+			card.ability.active = true
+			card.ability.extra.cards = math.min(#G.hand.highlighted - (G.hand.config.card_limit - (#G.hand.cards - #G.hand.highlighted)), #G.hand.highlighted) + 1
+			end
 
 		if context.drawing_cards and card.ability.active then
 			card.ability.active = nil
