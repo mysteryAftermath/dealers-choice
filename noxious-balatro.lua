@@ -60,8 +60,8 @@ SMODS.Joker {
 }
 
 --[[ Salt
-	+2 Mult every time any
-	other joker is triggered
+	+2 Mult every time any other
+	Joker is triggered during scoring
 	(Ignores Salt and Pepper)
 ]]
 SMODS.Joker {
@@ -69,22 +69,28 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Salt',
 		text = {
-			"{C:mult}+2{} Mult every time any",
-			"other {C:attention}Joker{} is triggered",
+			"{C:mult}+2{} Mult every time any other",
+			"{C:attention}Joker{} is triggered during scoring",
 			"{s:0.8}Ignores Salt and Pepper"
 		}
 	},
-	config = { extra = { mult = 2 } },
+	config = { extra = { mult = 2 }, active = nil },
 	rarity = 1,
 	atlas = 'noxious-balatro',
 	pos = { x = 0, y = 0 },
 	cost = 3,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.mult } }
+		return { vars = { card.ability.extra.mult, card.ability.active } }
 	end,
 	calculate = function(self, card, context)
-		if context.post_trigger and context.cardarea == G.jokers then
+		if context.before then
+			card.ability.active = true
+		end
+		if context.after then
+			card.ability.active = nil
+		end
+		if context.post_trigger and context.cardarea == G.jokers and card.ability.active then
 			return {
 				mult = card.ability.extra.mult
 			}
@@ -93,8 +99,8 @@ SMODS.Joker {
 }
 
 --[[ Pepper
-	+15 Chips every time any
-	other joker is triggered
+	+15 Chips every time any other
+	Joker is triggered during scoring
 	(Ignores Salt and Pepper)
 ]]
 SMODS.Joker {
@@ -102,22 +108,28 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Pepper',
 		text = {
-			"{C:chips}+15{} Chips every time any",
-			"other {C:attention}Joker{} is triggered",
+			"{C:chips}+15{} Chips every time any other",
+			"{C:attention}Joker{} is triggered during scoring",
 			"{s:0.8}Ignores Salt and Pepper"
 		}
 	},
-	config = { extra = { chips = 15 } },
+	config = { extra = { chips = 15 }, active = nil },
 	rarity = 1,
 	atlas = 'noxious-balatro',
 	pos = { x = 1, y = 0 },
 	cost = 3,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.chips } }
+		return { vars = { card.ability.extra.chips, card.ability.active } }
 	end,
 	calculate = function(self, card, context)
-		if context.post_trigger and context.cardarea == G.jokers then
+		if context.before then
+			card.ability.active = true
+		end
+		if context.after then
+			card.ability.active = nil
+		end
+		if context.post_trigger and context.cardarea == G.jokers and card.ability.active then
 			return {
 				chips = card.ability.extra.chips
 			}
