@@ -39,7 +39,7 @@ SMODS.Joker {
 	config = { extra = { cards = 5 } },
 	rarity = 1,
 	atlas = 'noxious-balatro',
-	pos = { x = 0, y = 0 },
+	pos = { x = 2, y = 0 },
 	cost = 3,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
@@ -110,7 +110,7 @@ SMODS.Joker {
 	config = { extra = { chips = 15 } },
 	rarity = 1,
 	atlas = 'noxious-balatro',
-	pos = { x = 0, y = 0 },
+	pos = { x = 1, y = 0 },
 	cost = 3,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
@@ -142,7 +142,7 @@ SMODS.Joker {
 	config = { extra = { cards = 0 }, active = nil },
 	rarity = 2,
 	atlas = 'noxious-balatro',
-	pos = { x = 0, y = 0 },
+	pos = { x = 3, y = 0 },
 	cost = 5,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
@@ -186,7 +186,7 @@ SMODS.Joker {
 	config = { extra = { hands = 0, hands_last = 0 } },
 	rarity = 3,
 	atlas = 'noxious-balatro',
-	pos = { x = 0, y = 0 },
+	pos = { x = 4, y = 0 },
 	cost = 10,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
