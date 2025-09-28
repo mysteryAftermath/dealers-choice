@@ -249,7 +249,7 @@ SMODS.Joker {
 			}
         end
 
-        if context.end_of_round and context.cardarea == G.jokers and not G.GAME.blind.boss and not context.blueprint then
+        if context.end_of_round and context.cardarea == G.jokers and not G.GAME.blind.boss and not context.blueprint and context.game_over == false then
             card.ability.extra.hands = G.GAME.current_round.hands_left
 			ease_hands_played(-G.GAME.current_round.hands_left)
             return {
@@ -259,7 +259,7 @@ SMODS.Joker {
             }
         end
 
-		if context.end_of_round and context.cardarea == G.jokers and G.GAME.blind.boss and not context.blueprint then
+		if context.end_of_round and context.cardarea == G.jokers and G.GAME.blind.boss and not context.blueprint and context.game_over == false then
 			card.ability.extra.hands_last = 0
             return {
                 message = 'Adjourned!',
