@@ -181,7 +181,7 @@ SMODS.Joker {
 	cost = 5,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.cards, card.ability.trigger } }
+		return { vars = { card.ability.extra.cards, card.ability.active } }
 	end,
 	calculate = function(self, card, context)
 		if context.pre_discard then
