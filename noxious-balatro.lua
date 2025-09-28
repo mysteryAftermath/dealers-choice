@@ -41,7 +41,6 @@ function SMODS.calculate_individual_effect(effect, scored_card, key, amount, fro
 	end
 	return ret
 end
-
 -- Jokers
 
 ---- Common Jokers
@@ -201,6 +200,80 @@ SMODS.Joker {
 	end
 }
 
+--[[ Deathbed
+X2 Mult
+1 in 8 chance this card is destroyed at end of
+round to upgrade a random poker hand by 1 level
+(Upgrade amount increases by 1 at end of round,
+Destruction chance increases by 1 every ante)
+]]
+SMODS.Joker {
+	key = 'deathbed',
+	loc_txt = {
+		name = 'Deathbed',
+		text = {
+			"{X:mult,C:white}X2{} Mult",
+			"{C:green}#1# in #2#{} chance this card is destroyed at end of",
+			"round to upgrade a random {C:attention}poker hand{} by {C:attention}#3#{} levels",
+			"{C:inactive}(Upgrade amount increases by 1 at end of round,",
+			"{C:inactive}Destruction chance increases by 1 every ante)"
+		}
+	},
+	config = { extra = { chance = 1, odds = 8, upgrade = 1, xmult = 2 } },
+	rarity = 2,
+	atlas = 'noxious-balatro',
+	pos = { x = 6, y = 0 },
+	cost = 6,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_deathbed')
+		return { vars = { numerator, denominator, card.ability.extra.upgrade } }
+	end,
+	calculate = function(self, card, context)
+		if context.joker_main then
+			return {
+				xmult = card.ability.extra.xmult
+			}
+		end
+		if context.end_of_round and context.game_over == false then
+			if SMODS.pseudorandom_probability(card, 'nox_deathbed', card.ability.extra.chance, card.ability.extra.odds) then
+				local hands_list = {}
+				for k, v in pairs(G.GAME.hands) do
+					if v["visible"] == true then
+						table.insert(hands_list, k)
+					end
+				end
+				SMODS.smart_level_up_hand(card, hands_list[math.random(#hands_list)], nil, card.ability.extra.upgrade)
+				SMODS.destroy_cards(card, nil, nil, true)
+
+				return {
+					message = "I'm a goner!",
+					colour = G.C.MULT
+				}
+			end
+
+			card.ability.extra.upgrade = card.ability.extra.upgrade + 1
+			
+			if G.GAME.blind.boss then
+				if card.ability.extra.chance < card.ability.extra.odds then
+					card.ability.extra.chance = card.ability.extra.chance + 1
+				end
+				if card.ability.extra.chance >= card.ability.extra.odds then
+					local eval = function(card) return not card.REMOVED end
+					juice_card_until(card, eval, true)
+				end
+				return {
+					message = "*COUGH* *COUGH*",
+					colour = G.C.FILTER
+				}
+			end
+            return {
+				message = "I'M OLD!",
+				colour = G.C.FILTER
+			}
+        end
+	end
+}
 ---- Rare Jokers
 
 --[[ Turnabout
