@@ -19,6 +19,29 @@ SMODS.current_mod.optional_features = {
     }
 }
 
+--[[
+	Xmult detection from Cryptid
+]]
+local scie = SMODS.calculate_individual_effect
+function SMODS.calculate_individual_effect(effect, scored_card, key, amount, from_edition)
+	local ret = scie(effect, scored_card, key, amount, from_edition)
+	if
+		(
+			key == "x_mult"
+			or key == "xmult"
+			or key == "Xmult"
+			or key == "x_mult_mod"
+			or key == "xmult_mod"
+			or key == "Xmult_mod"
+		)
+		and amount ~= 1
+		and mult
+	then
+		SMODS.calculate_context({nox_xmult = true})
+	end
+	return ret
+end
+
 -- Jokers
 
 ---- Common Jokers
@@ -244,5 +267,36 @@ SMODS.Joker {
 				card = card
             }
         end
+	end
+}
+
+--[[ Double Vision
+	Gives X1.5 Chips when any source of 
+	XMULT is triggered during scoring
+]]
+SMODS.Joker {
+	key = 'seeingdouble',
+	loc_txt = {
+		name = 'Double Vision',
+		text = {
+			"Gives {X:chips,C:white}X#1#{} Chips when any source of",
+			"{X:mult,C:white}XMULT{} is triggered during scoring"
+		}
+	},
+	config = { extra = { xchips = 1.5 } },
+	rarity = 3,
+	atlas = 'noxious-balatro',
+	pos = { x = 5, y = 0 },
+	cost = 8,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.xchips } }
+	end,
+	calculate = function(self, card, context)
+		if context.nox_xmult then
+			return {
+				xchips = card.ability.extra.xchips
+			}
+		end
 	end
 }
