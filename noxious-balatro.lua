@@ -54,7 +54,7 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Flash Paper',
 		text = {
-			"Sell this card to {C:attention}Draw #1#{}", 
+			"Sell this card to {C:attention}Draw #1#{}",
 			"Cards from your deck"
 		}
 	},
@@ -154,6 +154,44 @@ SMODS.Joker {
 		if context.post_trigger and context.cardarea == G.jokers and card.ability.active then
 			return {
 				chips = card.ability.extra.chips
+			}
+		end
+	end
+}
+
+--[[ Coupon
+	Sell this card to gain
+	+1 selection in the 
+	current booster pack
+]]
+SMODS.Joker {
+	key = 'coupon',
+	loc_txt = {
+		name = 'Coupon',
+		text = {
+			"{C:attention}Sell{} this card to gain",
+			"{C:attention}+1{} selection in the",
+			"current booster pack"
+		}
+	},
+	config = { extra = { selection = 1 } },
+	rarity = 1,
+	atlas = 'noxious-balatro',
+	pos = { x = 2, y = 0 },
+	cost = 3,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.selection } }
+	end,
+	calculate = function(self, card, context)
+		if context.selling_self and G.GAME.pack_choices and G.GAME.pack_choices > 0 then
+			G.GAME.pack_choices = G.GAME.pack_choices + 1
+			return {
+				message = 'Sale!',
+				colour = G.C.FILTER,
+				cardarea = G.jokers,
+				selling_card = true,
+				card = card
 			}
 		end
 	end
