@@ -271,16 +271,18 @@ SMODS.Joker {
 }
 
 --[[ Double Vision
-	Gives X1.5 Chips when any source of 
-	XMULT is triggered during scoring
+	Gives X1.5 Chips when
+	any source of XMULT is
+	triggered during scoring
 ]]
 SMODS.Joker {
 	key = 'seeingdouble',
 	loc_txt = {
 		name = 'Double Vision',
 		text = {
-			"Gives {X:chips,C:white}X#1#{} Chips when any source of",
-			"{X:mult,C:white}XMULT{} is triggered during scoring"
+			"Gives {X:chips,C:white}X#1#{} Chips when",
+			"any source of {X:mult,C:white}XMULT{} is",
+			"triggered during scoring"
 		}
 	},
 	config = { extra = { xchips = 1.5 } },
