@@ -188,7 +188,7 @@ SMODS.Joker {
 			G.GAME.pack_choices = G.GAME.pack_choices + 1
 			return {
 				message = 'Sale!',
-				colour = G.C.FILTER,
+				colour = G.C.MONEY,
 				cardarea = G.jokers,
 				selling_card = true,
 				card = card
