@@ -263,6 +263,7 @@ SMODS.Joker {
 	pos = { x = 6, y = 0 },
 	cost = 6,
 	blueprint_compat = true,
+	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
 		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_deathbed')
 		return { vars = { numerator, denominator, card.ability.extra.upgrade } }
