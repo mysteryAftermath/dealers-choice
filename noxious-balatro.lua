@@ -52,6 +52,16 @@ function Card:remove_from_deck(from_debuff)
 	return ret
 end
 
+-- Money Detection
+local ed = ease_dollars
+function ease_dollars(mod, instant)
+	if mod < 0 then
+		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = mod})
+	end
+	local ret = ed(mod, instant)
+	return ret
+end
+
 -- Jokers
 
 ---- Common Jokers
