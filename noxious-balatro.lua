@@ -47,6 +47,9 @@ function Card:remove_from_deck(from_debuff)
 		if self.config.center_key == "j_nox_hangman" then
 			G.GAME.nox_hangman = G.GAME.nox_hangman + self.ability.extra.bonus_xmult
 		end
+		if self.config.center_key == "j_nox_hero" and self.ability.extra.level == 4 then
+			G.jokers.config.card_limit = G.jokers.config.card_limit - 1
+		end
 	end
 	local ret = remove_card(self, from_debuff)
 	return ret
@@ -56,7 +59,7 @@ end
 local ed = ease_dollars
 function ease_dollars(mod, instant)
 	if mod < 0 then
-		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = mod})
+		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = -mod})
 	end
 	local ret = ed(mod, instant)
 	return ret
@@ -372,6 +375,82 @@ SMODS.Joker {
 		if context.selling_self then
 			G.GAME.nox_hangman = G.GAME.nox_hangman + card.ability.extra.bonus_xmult
 			return {}
+		end
+	end
+}
+
+--[[ Side Quest
+	This card gains an innate
+	edition every 40$ spent
+]]
+SMODS.Joker {
+	key = 'hero',
+	loc_txt = {
+		name = 'Side Quest',
+		text = {
+			"This card gains an {C:attention}innate{}",
+			"{C:dark_edition}edition{} every {C:money}#3#${} {C:inactive}[#1#]{} spent",
+			"{C:inactive}(Currently Level {C:dark_edition}#2#{C:inactive})"
+		}
+	},
+	config = { extra = { money_tracker = 0, level = 0, level_cost = 40, foil_chips = 50, holo_mult = 10, poly_xmult = 1.5 } },
+	rarity = 2,
+	atlas = 'noxious-balatro',
+	pos = { x = 5, y = 0 },
+	cost = 6,
+	blueprint_compat = false,
+	loc_vars = function(self, info_queue, card)
+		if card.ability.extra.level > 0 then info_queue[#info_queue+1] = {key = 'nox_foil', set = 'Other' } end
+		if card.ability.extra.level > 1 then info_queue[#info_queue+1] = {key = 'nox_holo', set = 'Other' } end
+		if card.ability.extra.level > 2 then info_queue[#info_queue+1] = {key = 'nox_poly', set = 'Other' } end
+		if card.ability.extra.level > 3 then info_queue[#info_queue+1] = {key = 'nox_negative', set = 'Other' } end
+		local remaining_exp = 0
+		if card.ability.extra.level < 4 then
+			remaining_exp = card.ability.extra.level_cost - card.ability.extra.money_tracker
+		end
+		return { vars = {
+			remaining_exp,
+			card.ability.extra.level,
+			card.ability.extra.level_cost,
+		 } }
+	end,
+	calculate = function(self, card, context)
+		if context.nox_spend_money and card.ability.extra.level < 4 then
+			card.ability.extra.money_tracker = card.ability.extra.money_tracker + context.nox_spent_money
+			while card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 do
+				card.ability.extra.money_tracker = card.ability.extra.money_tracker - card.ability.extra.level_cost
+				card.ability.extra.level = card.ability.extra.level + 1
+			end
+			if card.ability.extra.level == 4 then
+				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+			end
+			return {}
+		end
+		if context.joker_main then
+			if card.ability.extra.level > 2 then
+				return {
+					chips = card.ability.extra.foil_chips,
+					mult = card.ability.extra.holo_mult,
+					x_mult = card.ability.extra.poly_xmult
+					
+				}
+			end
+			if card.ability.extra.level > 1 then
+				return {
+					chips = card.ability.extra.foil_chips,
+					mult = card.ability.extra.holo_mult
+				}
+			end
+			if card.ability.extra.level > 0 then
+				return {
+					chips = card.ability.extra.foil_chips
+				}
+			end
+		end
+		if context.card_added and context.cardarea == G.jokers and context.card == self then
+			if card.ability.extra.level == 4 then
+				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+			end
 		end
 	end
 }
