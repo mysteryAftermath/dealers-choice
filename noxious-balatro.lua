@@ -327,8 +327,8 @@ SMODS.Joker {
 
 --[[ Hangman
 	X2 Mult
-	X1 Mult for each time this 
-	card is destroyed or sold
+	X1 Mult for each time this card
+	is destroyed or sold this run
 ]]
 SMODS.Joker {
 	key = 'hangman',
@@ -336,8 +336,8 @@ SMODS.Joker {
 		name = 'Hangman',
 		text = {
 			"{X:mult,C:white}X#1#{} Mult",
-			"{X:mult,C:white}X#2#{} Mult for each time this",
-			"card is {C:attention}destroyed{} or {C:attention}sold{}"
+			"{X:mult,C:white}X#2#{} Mult for each time this card",
+			"is {C:attention}destroyed{} or {C:attention}sold{} this run"
 		}
 	},
 	config = { extra = { xmult = 2, bonus_xmult = 1 } },
