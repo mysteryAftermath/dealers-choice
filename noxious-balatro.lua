@@ -454,6 +454,40 @@ SMODS.Joker {
 		end
 	end
 }
+
+--[[ In the Red
+	X0.2 Mult for every 
+	$1 below $0 you have
+	G.GAME.dollars
+]]
+SMODS.Joker {
+	key = 'inthered',
+	loc_txt = {
+		name = 'In the Red',
+		text = {
+			"{X:mult,C:white}X#1#{} Mult for every",
+			"{C:money}$1{} below {C:money}$0{} you have",
+			"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
+		}
+	},
+	config = { extra = { xmult = 0.2 } },
+	rarity = 2,
+	atlas = 'noxious-balatro',
+	pos = { x = 0, y = 0 },
+	cost = 5,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.xmult, 1 - (card.ability.extra.xmult * math.min((G.GAME.dollars or 0) + (G.GAME.dollar_buffer or 0), 0)) } }
+	end,
+	calculate = function(self, card, context)
+		if context.joker_main then
+			return {
+				xmult = 1 - (card.ability.extra.xmult * math.min((G.GAME.dollars or 0) + (G.GAME.dollar_buffer or 0), 0))
+			}
+		end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
