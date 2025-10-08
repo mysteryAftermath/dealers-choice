@@ -487,6 +487,51 @@ SMODS.Joker {
 	end
 }
 
+--[[ Lucky Sevens
+	Gives a chance to gain $7 based on
+	number of scoring 7s in played hand
+	(Currently 1 in 7 for each 7)
+]]
+SMODS.Joker {
+	key = '777',
+	loc_txt = {
+		name = 'Lucky Sevens',
+		text = {
+			"Gives a chance to gain {C:money}$#3#{} based on",
+			"number of scoring {C:attention}7s{} in {C:attention}played hand",
+			"{C:inactive}(Currently {C:green}#1#{} {C:inactive}in {C:green}#2#{} {C:inactive}for each {C:attention}7{C:inactive})"
+		}
+	},
+	config = { extra = { chance = 1, odds = 7, cash = 7 } },
+	rarity = 2,
+	atlas = 'noxious-balatro',
+	pos = { x = 8, y = 0 },
+	cost = 5,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
+		return { vars = { numerator, denominator, card.ability.extra.cash } }
+	end,
+	calculate = function(self, card, context)
+		if context.before then
+			local sevens = 0
+			local numerator, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
+			for _, playing_card in ipairs(context.scoring_hand) do
+                if playing_card.base.value == '7' then
+					sevens = sevens + 1
+                end
+            end
+			if sevens > 0 and SMODS.pseudorandom_probability(card, 'nox_777', sevens, card.ability.extra.odds) then
+				ease_dollars(card.ability.extra.cash, nil)
+				return {
+					message = "Jackpot!",
+					colour = G.C.MONEY
+				}
+			end
+		end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
