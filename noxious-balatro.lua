@@ -515,7 +515,6 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 		if context.before then
 			local sevens = 0
-			local numerator, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
 			for _, playing_card in ipairs(context.scoring_hand) do
                 if playing_card.base.value == '7' then
 					sevens = sevens + 1
