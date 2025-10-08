@@ -50,6 +50,9 @@ function Card:remove_from_deck(from_debuff)
 		if self.config.center_key == "j_nox_hero" and self.ability.extra.level == 4 then
 			G.jokers.config.card_limit = G.jokers.config.card_limit - 1
 		end
+		if self.config.center_key == "j_nox_nosuprises" then
+			G.GAME.nox_nosuprises = nil
+		end
 	end
 	local ret = remove_card(self, from_debuff)
 	return ret
@@ -62,6 +65,26 @@ function ease_dollars(mod, instant)
 		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = -mod})
 	end
 	local ret = ed(mod, instant)
+	return ret
+end
+
+-- RNG Hook local numerator, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
+local sprp = SMODS.pseudorandom_probability
+function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
+	local numerator, denominator = SMODS.get_probability_vars(trigger_obj, base_numerator, base_denominator, identifier or seed, true, no_mod)
+	if G.GAME.nox_nosuprises then return numerator / denominator >= 0.25 end
+	local ret = sprp(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
+	return ret
+end
+
+-- Card added hook
+local catd = Card.add_to_deck
+function Card:add_to_deck(from_debuff)
+		if self.config.center_key == "j_nox_nosuprises" then
+			G.GAME.nox_nosuprises = true
+			print("G.GAME.nosuprises = ".. tostring(G.GAME.nox_nosuprises))
+		end
+	local ret = catd(self, from_debuff)
 	return ret
 end
 
@@ -685,5 +708,34 @@ SMODS.Joker {
                xmult = card.ability.extra.bonus_xmult
             }
         end
+	end
+}
+
+--[[ No Suprises
+	Events with a probability of 1 in 4 or higher always occur
+	Events with a probability less than 1 in 4 never occur
+]]
+SMODS.Joker {
+	key = 'nosuprises',
+	loc_txt = {
+		name = 'No Suprises',
+		text = {
+			"Events with a {C:green}probability{} of {C:green}1{} in {C:green}4{} or higher {C:attention}always{} occur",
+			"Events with a {C:green}probability{} less than {C:green}1{} in {C:green}4{} {C:attention}never{} occur"
+		}
+	},
+	rarity = 3,
+	atlas = 'noxious-balatro',
+	pos = { x = 4, y = 0 },
+	cost = 8,
+	blueprint_compat = false,
+	loc_vars = function(self, info_queue, card)
+		return {}
+	end,
+	calculate = function(self, card, context)
+        if context.card_added and context.cardarea == G.jokers and context.card == self then
+			G.GAME.nox_nosuprises = true
+			print(tostring(G.GAME.nox_nosuprises))
+		end
 	end
 }
