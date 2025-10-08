@@ -588,3 +588,58 @@ SMODS.Joker {
 		end
 	end
 }
+
+--[[ Pumpkin Carriage
+	This Joker gains +0.25X Mult per
+	consecutive hand played without
+	a scoring number card or ace
+]]
+SMODS.Joker {
+	key = 'pupmkincarriage',
+	loc_txt = {
+		name = 'Pumpkin Carriage',
+		text = {
+			"This Joker gains {X:mult,C:white}X#1#{} Mult per",
+			"{C:attention}consecutive{} hand played without",
+			"a scoring {C:attention}number{} card or {C:attention}ace{}",
+			"{C:inactive}(Currently{} {X:mult,C:white}X#2#{} {C:inactive}Mult)"
+		}
+	},
+	config = { extra = { xmult = 0.25, bonus_xmult = 1 } },
+	rarity = 3,
+	atlas = 'noxious-balatro',
+	pos = { x = 7, y = 0 },
+	cost = 8,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.xmult, card.ability.extra.bonus_xmult } }
+	end,
+	calculate = function(self, card, context)
+        if context.before and not context.blueprint then
+            local numcard = false
+            for _, playing_card in ipairs(context.scoring_hand) do
+                if not playing_card:is_face() and playing_card.ability.effect ~= 'Stone Card' then
+                    numcard = true
+                    break
+                end
+            end
+            if numcard then
+                local last_mult = card.ability.extra.bonus_xmult
+                card.ability.extra.bonus_xmult = 1
+                if last_mult > 1 then
+                    return {
+                        message = localize('k_reset')
+                    }
+                end
+            else
+                -- See note about SMODS Scaling Manipulation on the wiki
+                card.ability.extra.bonus_xmult = card.ability.extra.bonus_xmult + card.ability.extra.xmult
+            end
+        end
+        if context.joker_main then
+            return {
+               xmult = card.ability.extra.bonus_xmult
+            }
+        end
+	end
+}
