@@ -65,7 +65,7 @@ function ease_dollars(mod, instant)
 		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = -mod})
 	end
 	local ret = ed(mod, instant)
-	return ret
+	return retw
 end
 
 -- RNG Hook local numerator, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
@@ -82,7 +82,6 @@ local catd = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
 		if self.config.center_key == "j_nox_nosuprises" then
 			G.GAME.nox_nosuprises = true
-			print("G.GAME.nosuprises = ".. tostring(G.GAME.nox_nosuprises))
 		end
 	local ret = catd(self, from_debuff)
 	return ret
@@ -735,7 +734,6 @@ SMODS.Joker {
 	calculate = function(self, card, context)
         if context.card_added and context.cardarea == G.jokers and context.card == self then
 			G.GAME.nox_nosuprises = true
-			print(tostring(G.GAME.nox_nosuprises))
 		end
 	end
 }
