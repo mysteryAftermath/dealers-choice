@@ -458,7 +458,6 @@ SMODS.Joker {
 --[[ In the Red
 	X0.2 Mult for every 
 	$1 below $0 you have
-	G.GAME.dollars
 ]]
 SMODS.Joker {
 	key = 'inthered',
