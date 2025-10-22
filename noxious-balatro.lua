@@ -110,6 +110,7 @@ SMODS.Joker {
 	pos = { x = 2, y = 0 },
 	cost = 3,
 	blueprint_compat = true,
+	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.cards } }
 	end,
@@ -117,7 +118,7 @@ SMODS.Joker {
 		if context.selling_self and G.hand and #G.hand.cards >= 1 then
 			SMODS.draw_cards(card.ability.extra.cards)
 			return {
-				message = 'Burned!',
+				message = 'TA-DA!',
 				colour = G.C.FILTER,
 				cardarea = G.jokers,
 				selling_card = true,
