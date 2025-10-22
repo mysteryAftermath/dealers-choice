@@ -223,9 +223,10 @@ SMODS.Joker {
 	config = { extra = { selection = 1 } },
 	rarity = 1,
 	atlas = 'noxious-balatro',
-	pos = { x = 2, y = 0 },
+	pos = { x = 5, y = 1 },
 	cost = 3,
 	blueprint_compat = true,
+	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.selection } }
 	end,
