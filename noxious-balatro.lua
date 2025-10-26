@@ -44,8 +44,8 @@ end
 local remove_card = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
 	if self.added_to_deck then
-		if self.config.center_key == "j_nox_hangman" then
-			G.GAME.nox_hangman = G.GAME.nox_hangman + self.ability.extra.bonus_xmult
+		if self.config.center_key == "j_nox_rasputin" then
+			G.GAME.nox_rasputin = G.GAME.nox_rasputin + self.ability.extra.bonus_xmult
 		end
 		if self.config.center_key == "j_nox_hero" and self.ability.extra.level == 4 then
 			G.jokers.config.card_limit = G.jokers.config.card_limit - 1
@@ -362,15 +362,15 @@ SMODS.Joker {
 	end
 }
 
---[[ Hangman
+--[[ Rasputin
 	X2 Mult
 	X1 Mult for each time this card
 	is destroyed or sold this run
 ]]
 SMODS.Joker {
-	key = 'hangman',
+	key = 'rasputin',
 	loc_txt = {
-		name = 'Hangman',
+		name = 'Rasputin',
 		text = {
 			"{X:mult,C:white}X#1#{} Mult",
 			"{X:mult,C:white}X#2#{} Mult for each time this card",
@@ -380,24 +380,24 @@ SMODS.Joker {
 	config = { extra = { xmult = 2, bonus_xmult = 1 } },
 	rarity = 2,
 	atlas = 'noxious-balatro',
-	pos = { x = 6, y = 0 },
+	pos = { x = 6, y = 1 },
 	cost = 5,
 	blueprint_compat = true,
 	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if G.GAME.nox_hangman == nil then
-			G.GAME.nox_hangman = 0
+		if G.GAME.nox_rasputin == nil then
+			G.GAME.nox_rasputin = 0
 		end
-		return { vars = { card.ability.extra.xmult + G.GAME.nox_hangman, card.ability.extra.bonus_xmult } }
+		return { vars = { card.ability.extra.xmult + G.GAME.nox_rasputin, card.ability.extra.bonus_xmult } }
 	end,
 	calculate = function(self, card, context)
 		if context.joker_main then
 			return {
-				xmult = card.ability.extra.xmult + G.GAME.nox_hangman
+				xmult = card.ability.extra.xmult + G.GAME.nox_rasputin
 			}
 		end
 		if context.selling_self then
-			G.GAME.nox_hangman = G.GAME.nox_hangman + card.ability.extra.bonus_xmult
+			G.GAME.nox_rasputin = G.GAME.nox_rasputin + card.ability.extra.bonus_xmult
 			return {}
 		end
 	end
