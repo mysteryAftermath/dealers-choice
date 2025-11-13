@@ -440,7 +440,6 @@ SMODS.Joker {
 					chips = card.ability.extra.foil_chips,
 					mult = card.ability.extra.holo_mult,
 					x_mult = card.ability.extra.poly_xmult
-					
 				}
 			end
 			if card.ability.extra.level > 1 then
