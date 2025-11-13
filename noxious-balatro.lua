@@ -40,18 +40,6 @@ function SMODS.calculate_individual_effect(effect, scored_card, key, amount, fro
 	return ret
 end
 
--- Destroy Detection
-local remove_card = Card.remove_from_deck
-function Card:remove_from_deck(from_debuff)
-	if self.added_to_deck then
-		if self.config.center_key == "j_nox_rasputin" then
-			G.GAME.nox_rasputin = G.GAME.nox_rasputin + self.ability.extra.bonus_xmult
-		end
-	end
-	local ret = remove_card(self, from_debuff)
-	return ret
-end
-
 -- Money Detection
 local ed = ease_dollars
 function ease_dollars(mod, instant)
@@ -380,9 +368,10 @@ SMODS.Joker {
 				xmult = card.ability.extra.xmult + G.GAME.nox_rasputin
 			}
 		end
-		if context.selling_self then
+	end,
+	remove_from_deck = function(self, card, from_debuff)
+		if not from_debuff then
 			G.GAME.nox_rasputin = G.GAME.nox_rasputin + card.ability.extra.bonus_xmult
-			return {}
 		end
 	end
 }
