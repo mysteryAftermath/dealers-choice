@@ -47,9 +47,6 @@ function Card:remove_from_deck(from_debuff)
 		if self.config.center_key == "j_nox_rasputin" then
 			G.GAME.nox_rasputin = G.GAME.nox_rasputin + self.ability.extra.bonus_xmult
 		end
-		if self.config.center_key == "j_nox_nosuprises" then
-			G.GAME.nox_nosuprises = nil
-		end
 	end
 	local ret = remove_card(self, from_debuff)
 	return ret
@@ -65,22 +62,12 @@ function ease_dollars(mod, instant)
 	return retw
 end
 
--- RNG Hook local numerator, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
+-- RNG Hook
 local sprp = SMODS.pseudorandom_probability
 function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
 	local numerator, denominator = SMODS.get_probability_vars(trigger_obj, base_numerator, base_denominator, identifier or seed, true, no_mod)
 	if G.GAME.nox_nosuprises then return numerator / denominator >= 0.25 end
 	local ret = sprp(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
-	return ret
-end
-
--- Card added hook
-local catd = Card.add_to_deck
-function Card:add_to_deck(from_debuff)
-		if self.config.center_key == "j_nox_nosuprises" then
-			G.GAME.nox_nosuprises = true
-		end
-	local ret = catd(self, from_debuff)
 	return ret
 end
 
@@ -735,9 +722,18 @@ SMODS.Joker {
 	loc_vars = function(self, info_queue, card)
 		return {}
 	end,
-	calculate = function(self, card, context)
-        if context.card_added and context.cardarea == G.jokers and context.card == self then
-			G.GAME.nox_nosuprises = true
+	add_to_deck = function(self, card, from_debuff)
+        if G.GAME.nox_nosuprises then
+			G.GAME.nox_nosuprises = G.GAME.nox_nosuprises + 1
+		else
+			G.GAME.nox_nosuprises = 1
+		end
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+		if G.GAME.nox_nosuprises > 1 then
+        	G.GAME.nox_nosuprises = G.GAME.nox_nosuprises - 1
+		else
+			G.GAME.nox_nosuprises = nil
 		end
 	end
 }
