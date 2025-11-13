@@ -138,7 +138,7 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Salt',
 		text = {
-			"{C:mult}+2{} Mult every time any other",
+			"{C:mult}+#1#{} Mult every time any other",
 			"{C:attention}Joker{} is triggered during scoring",
 			"{s:0.8}Ignores Salt and Pepper"
 		}
