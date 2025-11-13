@@ -47,9 +47,6 @@ function Card:remove_from_deck(from_debuff)
 		if self.config.center_key == "j_nox_rasputin" then
 			G.GAME.nox_rasputin = G.GAME.nox_rasputin + self.ability.extra.bonus_xmult
 		end
-		if self.config.center_key == "j_nox_hero" and self.ability.extra.level == 4 then
-			G.jokers.config.card_limit = G.jokers.config.card_limit - 1
-		end
 		if self.config.center_key == "j_nox_nosuprises" then
 			G.GAME.nox_nosuprises = nil
 		end
@@ -471,10 +468,15 @@ SMODS.Joker {
 				}
 			end
 		end
-		if context.card_added and context.cardarea == G.jokers and context.card == self then
-			if card.ability.extra.level == 4 then
-				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
-			end
+	end,
+	add_to_deck = function(self, card, from_debuff)
+        if card.ability.extra.level == 4 then
+			G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+		end
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        if card.ability.extra.level == 4 then
+			G.jokers.config.card_limit = G.jokers.config.card_limit - 1
 		end
 	end
 }
