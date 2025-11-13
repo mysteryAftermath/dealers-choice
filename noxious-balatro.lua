@@ -639,7 +639,7 @@ SMODS.Joker {
 			"triggered during scoring"
 		}
 	},
-	config = { extra = { xchips = 1.5 } },
+	config = { extra = { xchips = 1.25 } },
 	rarity = 3,
 	atlas = 'noxious-balatro',
 	pos = { x = 5, y = 0 },
