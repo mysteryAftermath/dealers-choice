@@ -177,7 +177,7 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Pepper',
 		text = {
-			"{C:chips}+15{} Chips every time any other",
+			"{C:chips}+#1#{} Chips every time any other",
 			"{C:attention}Joker{} is triggered during scoring",
 			"{s:0.8}Ignores Salt and Pepper"
 		}
