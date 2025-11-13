@@ -182,7 +182,7 @@ SMODS.Joker {
 			"{s:0.8}Ignores Salt and Pepper"
 		}
 	},
-	config = { extra = { chips = 15 }, active = nil },
+	config = { extra = { chips = 8 }, active = nil },
 	rarity = 1,
 	atlas = 'noxious-balatro',
 	pos = { x = 1, y = 0 },
