@@ -386,8 +386,8 @@ SMODS.Joker {
 		name = 'Side Quest',
 		text = {
 			"This card gains an {C:attention}innate{}",
-			"{C:dark_edition}edition{} every {C:money}#3#${} {C:inactive}[#1#]{} spent",
-			"{C:inactive}(Currently Level {C:dark_edition}#2#{C:inactive})"
+			"{C:dark_edition}edition{} every {C:money}#1#${} {C:inactive}[#2#]{} spent",
+			"{C:inactive}(Currently Level {C:dark_edition}#3#{C:inactive})"
 		}
 	},
 	config = { extra = { money_tracker = 0, level = 0, level_cost = 40, foil_chips = 50, holo_mult = 10, poly_xmult = 1.5 } },
@@ -408,30 +408,83 @@ SMODS.Joker {
 		end
 		-- Bandaid fix for changing sprite when save is loaded
 		card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
+		local level_print = ""
 		if card.ability.extra.level == 4 then
 			card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
+			level_print = "MAX"
+		else
+			level_print = tostring(card.ability.extra.level)
 		end
 		return { vars = {
-			remaining_exp,
-			card.ability.extra.level,
 			card.ability.extra.level_cost,
+			remaining_exp,
+			level_print,
 		 } }
 	end,
 	calculate = function(self, card, context)
-		if context.nox_spend_money and card.ability.extra.level < 4 then
+		if not context.blueprint and context.nox_spend_money and card.ability.extra.level < 4 and (context.locked_card == nil or context.locked_card == card) then
 			card.ability.extra.money_tracker = card.ability.extra.money_tracker + context.nox_spent_money
-			while card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 do
-				card.ability.extra.money_tracker = card.ability.extra.money_tracker - card.ability.extra.level_cost
-				card.ability.extra.level = card.ability.extra.level + 1
-				card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
-			end
-			if card.ability.extra.level == 4 then
-				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
-				card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
+			if card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 then
+				G.E_MANAGER:add_event(Event({
+					trigger = 'after',
+					delay = 0.4,
+					func = function()
+						play_sound('tarot1')
+						card:juice_up(0.3, 0.5)
+						return true
+					end
+				}))
+				G.E_MANAGER:add_event(Event({
+					trigger = 'after',
+					delay = 0.15,
+					func = function()
+						card:flip()
+						play_sound('card1')
+						card:juice_up(0.3, 0.3)
+						return true
+					end
+				}))
+				delay(0.2)
+				G.E_MANAGER:add_event(Event({
+					trigger = 'after',
+					delay = 0.1,
+					func = function()
+						card.ability.extra.money_tracker = card.ability.extra.money_tracker - card.ability.extra.level_cost
+						card.ability.extra.level = card.ability.extra.level + 1
+						card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
+						if card.ability.extra.level == 4 then
+							G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+							card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
+						end
+						attention_text({
+							text = "Level Up!",
+							scale = 1.3,
+							hold = 1.4,
+							major = card,
+							backdrop_colour = G.C.FILTER,
+							offset = { x = 0, y = 0 },
+							silent = true
+						})
+						return true
+					end
+				}))
+				G.E_MANAGER:add_event(Event({
+					trigger = 'after',
+					delay = 0.15,
+					func = function()
+						if card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 then
+							SMODS.calculate_context({nox_spend_money = true, nox_spent_money = 0, locked_card = card})
+						end
+						card:flip()
+						play_sound('tarot2')
+						card:juice_up(0.3, 0.3)
+						return true
+					end
+				}))
 			end
 			return {}
 		end
-		if context.joker_main then
+		if not context.blueprint and context.joker_main then
 			if card.ability.extra.level > 2 then
 				return {
 					chips = card.ability.extra.foil_chips,
