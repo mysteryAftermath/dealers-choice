@@ -394,6 +394,7 @@ SMODS.Joker {
 	rarity = 2,
 	atlas = 'noxious-balatro',
 	pos = { x = 0, y = 2 },
+	soul_pos = { x = 1, y = 0},
 	cost = 6,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
@@ -404,6 +405,11 @@ SMODS.Joker {
 		local remaining_exp = 0
 		if card.ability.extra.level < 4 then
 			remaining_exp = card.ability.extra.level_cost - card.ability.extra.money_tracker
+		end
+		-- Bandaid fix for changing sprite when save is loaded
+		card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
+		if card.ability.extra.level == 4 then
+			card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
 		end
 		return { vars = {
 			remaining_exp,
@@ -417,9 +423,11 @@ SMODS.Joker {
 			while card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 do
 				card.ability.extra.money_tracker = card.ability.extra.money_tracker - card.ability.extra.level_cost
 				card.ability.extra.level = card.ability.extra.level + 1
+				card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
 			end
 			if card.ability.extra.level == 4 then
 				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+				card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
 			end
 			return {}
 		end
