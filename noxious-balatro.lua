@@ -792,7 +792,7 @@ SMODS.Joker {
 ]]
 -- Custom Poker Hand for The Spice
 SMODS.PokerHand {
-    key = "Precience",
+    key = "Prescience",
     visible = false,
     mult = 16,
     chips = 160,
