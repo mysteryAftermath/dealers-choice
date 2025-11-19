@@ -47,7 +47,7 @@ function ease_dollars(mod, instant)
 		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = -mod})
 	end
 	local ret = ed(mod, instant)
-	return retw
+	return ret
 end
 
 -- RNG Hook
