@@ -826,7 +826,7 @@ SMODS.PokerHand {
 			end
 		end
 		if match == 5 then
-			return hand
+			return { hand }
 		end
     end
 }
