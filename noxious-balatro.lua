@@ -786,3 +786,120 @@ SMODS.Joker {
 		end
 	end
 }
+
+--[[ The Spice
+	
+]]
+-- Custom Poker Hand for The Spice
+SMODS.PokerHand {
+    key = "Precience",
+    visible = false,
+    mult = 16,
+    chips = 160,
+    l_mult = 3,
+    l_chips = 50,
+    example = {
+        { 'S_A', true },
+        { 'S_A', true },
+        { 'S_A', true },
+        { 'S_A', true },
+        { 'S_A', true }
+    },
+    evaluate = function(parts, hand)
+        if not G.GAME.nox_the_spice then return {} end
+		local handcheck = {}
+		for _, rank in pairs(G.GAME.nox_the_spice_hand) do
+			if handcheck[rank] == nil then
+				handcheck[rank] = 1
+			else
+				handcheck[rank] = handcheck[rank] + 1
+			end
+		end
+		local match = 0
+		for _, playing_card in ipairs(hand) do
+			for _,rank in pairs(G.GAME.nox_the_spice_hand) do
+				if playing_card.base.value == rank and handcheck[rank] > 0 then
+					match = match + 1
+					handcheck[rank] = handcheck[rank] - 1
+					break
+				end
+			end
+		end
+		if match == 5 then
+			return hand
+		end
+    end
+}
+
+SMODS.Joker {
+	key = 'spice',
+	loc_txt = {
+		name = 'The Spice',
+		text = {
+			"Currently #1# #2# #3# #4# #5#"
+		}
+	},
+	rarity = 3,
+	atlas = 'noxious-balatro',
+	pos = { x = 0, y = 0 },
+	cost = 8,
+	blueprint_compat = false,
+	loc_vars = function(self, info_queue, camrd)
+		if G.GAME.nox_the_spice_hand == nil then return { vars = { 0,0,0,0,0 } } end
+		return { vars = { G.GAME.nox_the_spice_hand[0], G.GAME.nox_the_spice_hand[1], G.GAME.nox_the_spice_hand[2], G.GAME.nox_the_spice_hand[3], G.GAME.nox_the_spice_hand[4], } }
+	end,
+	calculate = function(self, card, context)
+		if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and context.game_over == false then
+			for i = 0, 5 do 
+				local rank = math.random(SMODS.Rank.max_id.value)
+				if rank == 11 then
+					G.GAME.nox_the_spice_hand[i] = "Jack"
+				elseif rank == 12 then
+					G.GAME.nox_the_spice_hand[i] = "Queen"
+				elseif rank == 13 then
+					G.GAME.nox_the_spice_hand[i] = "King"
+				elseif rank == 14 then
+					G.GAME.nox_the_spice_hand[i] = "Ace"
+				else
+					G.GAME.nox_the_spice_hand[i] = tostring(rank)
+				end
+			end
+			return {
+				message = 'The Spice must flow.',
+				colour = G.C.EDITION,
+				card = card
+			}
+		end
+	end,
+	add_to_deck = function(self, card, from_debuff)
+		if G.GAME.nox_the_spice_hand == nil then G.GAME.nox_the_spice_hand = {} end
+		if not from_debuff then
+			for i = 0, 5 do 
+				local rank = math.random(SMODS.Rank.max_id.value)
+				if rank == 11 then
+					G.GAME.nox_the_spice_hand[i] = "Jack"
+				elseif rank == 12 then
+					G.GAME.nox_the_spice_hand[i] = "Queen"
+				elseif rank == 13 then
+					G.GAME.nox_the_spice_hand[i] = "King"
+				elseif rank == 14 then
+					G.GAME.nox_the_spice_hand[i] = "Ace"
+				else
+					G.GAME.nox_the_spice_hand[i] = tostring(rank)
+				end
+			end
+		end
+        if G.GAME.nox_the_spice then
+			G.GAME.nox_the_spice = G.GAME.nox_the_spice + 1
+		else
+			G.GAME.nox_the_spice = 1
+		end
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+		if G.GAME.nox_the_spice > 1 then
+        	G.GAME.nox_the_spice = G.GAME.nox_the_spice - 1
+		else
+			G.GAME.nox_the_spice = nil
+		end
+	end
+}
