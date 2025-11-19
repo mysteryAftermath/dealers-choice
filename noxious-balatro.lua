@@ -833,7 +833,7 @@ SMODS.PokerHand {
 
 function Gen_spice_hand()
 	for i = 0, 5 do 
-		local rank = math.random(SMODS.Rank.max_id.value)
+		local rank = math.random(2, SMODS.Rank.max_id.value)
 		if rank == 11 then
 			G.GAME.nox_the_spice_hand[i] = "Jack"
 		elseif rank == 12 then
