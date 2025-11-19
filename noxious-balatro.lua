@@ -844,7 +844,7 @@ SMODS.Joker {
 	pos = { x = 0, y = 0 },
 	cost = 8,
 	blueprint_compat = false,
-	loc_vars = function(self, info_queue, camrd)
+	loc_vars = function(self, info_queue, card)
 		if G.GAME.nox_the_spice_hand == nil then return { vars = { 0,0,0,0,0 } } end
 		return { vars = { G.GAME.nox_the_spice_hand[0], G.GAME.nox_the_spice_hand[1], G.GAME.nox_the_spice_hand[2], G.GAME.nox_the_spice_hand[3], G.GAME.nox_the_spice_hand[4], } }
 	end,
