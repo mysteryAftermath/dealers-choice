@@ -831,6 +831,23 @@ SMODS.PokerHand {
     end
 }
 
+function Gen_spice_hand()
+	for i = 0, 5 do 
+		local rank = math.random(SMODS.Rank.max_id.value)
+		if rank == 11 then
+			G.GAME.nox_the_spice_hand[i] = "Jack"
+		elseif rank == 12 then
+			G.GAME.nox_the_spice_hand[i] = "Queen"
+		elseif rank == 13 then
+			G.GAME.nox_the_spice_hand[i] = "King"
+		elseif rank == 14 then
+			G.GAME.nox_the_spice_hand[i] = "Ace"
+		else
+			G.GAME.nox_the_spice_hand[i] = tostring(rank)
+		end
+	end
+end
+
 SMODS.Joker {
 	key = 'spice',
 	loc_txt = {
@@ -850,20 +867,7 @@ SMODS.Joker {
 	end,
 	calculate = function(self, card, context)
 		if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and context.game_over == false then
-			for i = 0, 5 do 
-				local rank = math.random(SMODS.Rank.max_id.value)
-				if rank == 11 then
-					G.GAME.nox_the_spice_hand[i] = "Jack"
-				elseif rank == 12 then
-					G.GAME.nox_the_spice_hand[i] = "Queen"
-				elseif rank == 13 then
-					G.GAME.nox_the_spice_hand[i] = "King"
-				elseif rank == 14 then
-					G.GAME.nox_the_spice_hand[i] = "Ace"
-				else
-					G.GAME.nox_the_spice_hand[i] = tostring(rank)
-				end
-			end
+			Gen_spice_hand()
 			return {
 				message = 'The Spice must flow.',
 				colour = G.C.EDITION,
@@ -874,20 +878,7 @@ SMODS.Joker {
 	add_to_deck = function(self, card, from_debuff)
 		if G.GAME.nox_the_spice_hand == nil then G.GAME.nox_the_spice_hand = {} end
 		if not from_debuff then
-			for i = 0, 5 do 
-				local rank = math.random(SMODS.Rank.max_id.value)
-				if rank == 11 then
-					G.GAME.nox_the_spice_hand[i] = "Jack"
-				elseif rank == 12 then
-					G.GAME.nox_the_spice_hand[i] = "Queen"
-				elseif rank == 13 then
-					G.GAME.nox_the_spice_hand[i] = "King"
-				elseif rank == 14 then
-					G.GAME.nox_the_spice_hand[i] = "Ace"
-				else
-					G.GAME.nox_the_spice_hand[i] = tostring(rank)
-				end
-			end
+			Gen_spice_hand()
 		end
         if G.GAME.nox_the_spice then
 			G.GAME.nox_the_spice = G.GAME.nox_the_spice + 1
