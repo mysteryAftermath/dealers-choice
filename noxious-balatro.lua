@@ -231,13 +231,27 @@ SMODS.Joker {
 	All cards of rank X count
 	as cards of rank Y instead
 ]]
+
+function RankToString(rank)
+	if rank == 11 then
+		return "Jack"
+	elseif rank == 12 then
+		return "Queen"
+	elseif rank == 13 then
+		return "King"
+	elseif rank == 14 then
+		return "Ace"
+	end
+	return tostring(rank)
+end
+
 SMODS.Joker {
 	key = 'proxy',
 	loc_txt = {
 		name = 'Proxy',
 		text = {
-			"All cards of rank {C:attention}#1#{} count",
-			"as cards of rank {C:attention}#2#{} instead",
+			"All {C:attention}#1#s{} count",
+			"as {C:attention}#2#s{} instead",
 		}
 	},
 	rarity = 1,
@@ -249,7 +263,7 @@ SMODS.Joker {
 		if not G.GAME.nox_proxy then
 			return { vars = { 'X', 'Y' } }
 		end
-		return { vars = { G.GAME.nox_proxy_a, G.GAME.nox_proxy_b } }
+		return { vars = { RankToString(G.GAME.nox_proxy_a), RankToString(G.GAME.nox_proxy_b) } }
 	end,
 	calculate = function(self, card, context)
 	end,
