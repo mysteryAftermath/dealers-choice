@@ -578,7 +578,7 @@ SMODS.Joker {
 		if context.before then
 			local sevens = 0
 			for _, playing_card in ipairs(context.scoring_hand) do
-                if playing_card.base.value == '7' then
+                if playing_card:get_id() == 7 then
 					sevens = sevens + 1
                 end
             end
