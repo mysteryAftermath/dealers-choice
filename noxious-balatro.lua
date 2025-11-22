@@ -59,6 +59,16 @@ function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_
 	return ret
 end
 
+-- Card:get_id hook
+local cgid = Card.get_id
+function Card:get_id()
+	if G.GAME.nox_proxy and not SMODS.has_no_rank(self) and self.base.id == G.GAME.nox_proxy_a then
+		return G.GAME.nox_proxy_b
+	end
+	local ret = cgid(self)
+	return ret
+end
+
 -- Jokers
 
 ---- Common Jokers
@@ -213,6 +223,55 @@ SMODS.Joker {
 				selling_card = true,
 				card = card
 			}
+		end
+	end
+}
+
+--[[ Proxy
+	All cards of rank X count
+	as cards of rank Y instead
+]]
+SMODS.Joker {
+	key = 'proxy',
+	loc_txt = {
+		name = 'Proxy',
+		text = {
+			"All cards of rank {C:attention}#1#{} count",
+			"as cards of rank {C:attention}#2#{} instead",
+		}
+	},
+	rarity = 1,
+	atlas = 'noxious-balatro',
+	pos = { x = 1, y = 0 },
+	cost = 3,
+	blueprint_compat = false,
+	loc_vars = function(self, info_queue, card)
+		if not G.GAME.nox_proxy then
+			return { vars = { 'X', 'Y' } }
+		end
+		return { vars = { G.GAME.nox_proxy_a, G.GAME.nox_proxy_b } }
+	end,
+	calculate = function(self, card, context)
+	end,
+	add_to_deck = function(self, card, from_debuff)
+        if G.GAME.nox_proxy then
+			G.GAME.nox_proxy = G.GAME.nox_proxy + 1
+		else
+			G.GAME.nox_proxy = 1
+		end
+		if not from_debuff then
+			G.GAME.nox_proxy_a = math.random(2, SMODS.Rank.max_id.value)
+			G.GAME.nox_proxy_b = math.random(2, SMODS.Rank.max_id.value)
+			if G.GAME.nox_proxy_b == G.GAME.nox_proxy_a then
+				G.GAME.nox_proxy_b = G.GAME.nox_proxy_b + 1
+			end
+		end
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+		if G.GAME.nox_proxy > 1 then
+        	G.GAME.nox_proxy = G.GAME.nox_proxy - 1
+		else
+			G.GAME.nox_proxy = nil
 		end
 	end
 }
