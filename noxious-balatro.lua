@@ -232,7 +232,7 @@ SMODS.Joker {
 	as cards of rank Y instead
 ]]
 
-function RankToString(rank)
+function rank_to_string(rank)
 	if rank == 11 then
 		return "Jack"
 	elseif rank == 12 then
@@ -263,7 +263,7 @@ SMODS.Joker {
 		if not G.GAME.nox_proxy then
 			return { vars = { 'X', 'Y' } }
 		end
-		return { vars = { RankToString(G.GAME.nox_proxy_a), RankToString(G.GAME.nox_proxy_b) } }
+		return { vars = { rank_to_string(G.GAME.nox_proxy_a), rank_to_string(G.GAME.nox_proxy_b) } }
 	end,
 	calculate = function(self, card, context)
 	end,
