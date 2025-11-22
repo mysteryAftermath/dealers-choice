@@ -831,7 +831,7 @@ SMODS.PokerHand {
     end
 }
 
-function Gen_spice_hand()
+function gen_spice_hand()
 	for i = 0, 5 do 
 		local rank = math.random(2, SMODS.Rank.max_id.value)
 		if rank == 11 then
@@ -867,7 +867,7 @@ SMODS.Joker {
 	end,
 	calculate = function(self, card, context)
 		if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and context.game_over == false then
-			Gen_spice_hand()
+			gen_spice_hand()
 			return {
 				message = 'The Spice must flow.',
 				colour = G.C.EDITION,
@@ -878,7 +878,7 @@ SMODS.Joker {
 	add_to_deck = function(self, card, from_debuff)
 		if G.GAME.nox_the_spice_hand == nil then G.GAME.nox_the_spice_hand = {} end
 		if not from_debuff then
-			Gen_spice_hand()
+			gen_spice_hand()
 		end
         if G.GAME.nox_the_spice then
 			G.GAME.nox_the_spice = G.GAME.nox_the_spice + 1
