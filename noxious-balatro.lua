@@ -394,7 +394,7 @@ SMODS.Joker {
 	rarity = 2,
 	atlas = 'noxious-balatro',
 	pos = { x = 0, y = 2 },
-	soul_pos = { x = 1, y = 0},
+	soul_pos = { x = -1, y = 0},
 	cost = 6,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
