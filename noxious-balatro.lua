@@ -283,12 +283,12 @@ SMODS.Joker {
 				card.ability.extra.proxy_b = card.ability.extra.proxy_b < 14 and card.ability.extra.proxy_b + 1 or 2
 			end
 		end
-		G.GAME.nox_proxy_a[card] = card.ability.extra.proxy_a
-		G.GAME.nox_proxy_b[card] = card.ability.extra.proxy_b
+		G.GAME.nox_proxy_a[card.sort_id] = card.ability.extra.proxy_a
+		G.GAME.nox_proxy_b[card.sort_id] = card.ability.extra.proxy_b
     end,
     remove_from_deck = function(self, card, from_debuff)
-		G.GAME.nox_proxy_a[card] = nil
-		G.GAME.nox_proxy_b[card] = nil
+		G.GAME.nox_proxy_a[card.sort_id] = nil
+		G.GAME.nox_proxy_b[card.sort_id] = nil
 		if G.GAME.nox_proxy > 1 then
         	G.GAME.nox_proxy = G.GAME.nox_proxy - 1
 		else
