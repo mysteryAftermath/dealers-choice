@@ -64,7 +64,7 @@ local cgid = Card.get_id
 function Card:get_id()
 	local ret = cgid(self)
 	if G.GAME.nox_proxy and not SMODS.has_no_rank(self) then
-		local prox_val = self.base.id
+		--local prox_val = self.base.id
 		for proxy_instance, proxy_value_a in pairs(G.GAME.nox_proxy_a) do
 			--if prox_val == proxy_value_a then prox_val = G.GAME.nox_proxy_b[proxy_instance] end
 			if self.base.id == proxy_value_a then return G.GAME.nox_proxy_b[proxy_instance] end
