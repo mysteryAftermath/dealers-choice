@@ -62,10 +62,15 @@ end
 -- Card:get_id hook
 local cgid = Card.get_id
 function Card:get_id()
-	if G.GAME.nox_proxy and not SMODS.has_no_rank(self) and self.base.id == G.GAME.nox_proxy_a then
-		return G.GAME.nox_proxy_b
-	end
 	local ret = cgid(self)
+	if G.GAME.nox_proxy and not SMODS.has_no_rank(self) then
+		--local prox_val = self.base.id
+		for proxy_instance, proxy_value_a in pairs(G.GAME.nox_proxy_a) do
+			--if prox_val == proxy_value_a then prox_val = G.GAME.nox_proxy_b[proxy_instance] end
+			if self.base.id == proxy_value_a then return G.GAME.nox_proxy_b[proxy_instance] end
+		end
+		--return prox_val
+	end
 	return ret
 end
 
@@ -254,34 +259,36 @@ SMODS.Joker {
 			"as {C:attention}#2#s{} instead",
 		}
 	},
+	config = { extra = { proxy_a = 0, proxy_b = 0 } },
 	rarity = 1,
 	atlas = 'noxious-balatro',
 	pos = { x = 1, y = 0 },
 	cost = 3,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if not G.GAME.nox_proxy then
+		if not G.GAME.nox_proxy or card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
 			return { vars = { 'X', 'Y' } }
 		end
-		return { vars = { rank_to_string(G.GAME.nox_proxy_a), rank_to_string(G.GAME.nox_proxy_b) } }
-	end,
-	calculate = function(self, card, context)
+		return { vars = { rank_to_string(card.ability.extra.proxy_a), rank_to_string(card.ability.extra.proxy_b) } }
 	end,
 	add_to_deck = function(self, card, from_debuff)
-        if G.GAME.nox_proxy then
-			G.GAME.nox_proxy = G.GAME.nox_proxy + 1
-		else
-			G.GAME.nox_proxy = 1
-		end
+        if not G.GAME.nox_proxy then G.GAME.nox_proxy = 0 end
+		G.GAME.nox_proxy = G.GAME.nox_proxy + 1
 		if not from_debuff then
-			G.GAME.nox_proxy_a = math.random(2, SMODS.Rank.max_id.value)
-			G.GAME.nox_proxy_b = math.random(2, SMODS.Rank.max_id.value)
-			if G.GAME.nox_proxy_b == G.GAME.nox_proxy_a then
-				G.GAME.nox_proxy_b = G.GAME.nox_proxy_b + 1
+			if not G.GAME.nox_proxy_a then G.GAME.nox_proxy_a = {} end
+			if not G.GAME.nox_proxy_b then G.GAME.nox_proxy_b = {} end
+			card.ability.extra.proxy_a = math.random(2, SMODS.Rank.max_id.value)
+			card.ability.extra.proxy_b = math.random(2, SMODS.Rank.max_id.value)
+			if card.ability.extra.proxy_b == card.ability.extra.proxy_a then
+				card.ability.extra.proxy_b = card.ability.extra.proxy_b < 14 and card.ability.extra.proxy_b + 1 or 2
 			end
 		end
+		G.GAME.nox_proxy_a[card.sort_id] = card.ability.extra.proxy_a
+		G.GAME.nox_proxy_b[card.sort_id] = card.ability.extra.proxy_b
     end,
     remove_from_deck = function(self, card, from_debuff)
+		G.GAME.nox_proxy_a[card.sort_id] = nil
+		G.GAME.nox_proxy_b[card.sort_id] = nil
 		if G.GAME.nox_proxy > 1 then
         	G.GAME.nox_proxy = G.GAME.nox_proxy - 1
 		else
