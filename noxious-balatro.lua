@@ -762,18 +762,18 @@ SMODS.Joker {
 }
 
 --[[ Sidewalk
-	The first played card 
-	of each rank gives 
-	X1.1 Chips when scored
+	The first played card of 
+	each rank gives X1.1 Chips 
+	when scored for the first time
 ]]
 SMODS.Joker {
     key = "sidewalk",
 	loc_txt = {
 		name = 'Sidewalk',
 		text = {
-			"The first played card",
-			"of each {C:attention}rank{} gives ",
-			"{X:chips,C:white}X#1#{} chips when scored",
+			"The first played card of",
+			"each {C:attention}rank{} gives {X:chips,C:white}X#1#{} chips",
+			"when scored for the first time",
 		}
 	},
 	atlas = 'noxious-balatro',
