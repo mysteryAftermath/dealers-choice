@@ -74,6 +74,94 @@ function Card:get_id()
 	return ret
 end
 
+local csdbf = Card.set_debuff
+function Card:set_debuff(should_debuff)
+	local ret = csdbf(self, should_debuff)
+
+	if self.seal and self.seal == "nox_Silver" then
+		self.debuff = false
+		return
+	end
+
+	return ret
+end
+
+-- Seals
+
+--[[ Silver Seal
+	This card cannot be debuffed
+]]
+SMODS.Seal {
+    key = 'Silver',
+	atlas = 'noxious-balatro',
+    pos = { x = 0, y = 6 },
+    badge_colour = G.C.EDITION,
+    draw = function(self, card, layer)
+        if (layer == 'card' or layer == 'both') and card.sprite_facing == 'front' then
+            G.shared_seals[card.seal].role.draw_major = card
+            G.shared_seals[card.seal]:draw_shader('dissolve', nil, nil, nil, card.children.center)
+            G.shared_seals[card.seal]:draw_shader('voucher', nil, card.ARGS.send_to_shader, nil, card.children.center)
+        end
+    end
+}
+
+-- Spectral Cards
+
+--[[ Ward
+	Add a Silver Seal
+	to 1 selected 
+	card in your hand
+]]
+SMODS.Consumable {
+    key = 'ward',
+    set = 'Spectral',
+	loc_txt = {
+		name = 'Ward',
+		text = {
+			"Add a {C:inactive}Silver Seal{}",
+			"to {C:attention}1{} selected",
+			"card in your hand",
+		}
+	},
+	atlas = 'noxious-balatro',
+    pos = { x = 0, y = 5 },
+    config = { extra = { seal = 'nox_Silver' }, max_highlighted = 1 },
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue + 1] = G.P_SEALS[card.ability.extra.seal]
+        return { vars = { card.ability.max_highlighted } }
+    end,
+    use = function(self, card, area, copier)
+        local conv_card = G.hand.highlighted[1]
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                play_sound('tarot1')
+                card:juice_up(0.3, 0.5)
+                return true
+            end
+        }))
+
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.1,
+            func = function()
+                conv_card:set_seal(card.ability.extra.seal, nil, true)
+				conv_card:set_debuff()
+                return true
+            end
+        }))
+
+        delay(0.5)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.2,
+            func = function()
+                G.hand:unhighlight_all()
+                return true
+            end
+        }))
+    end,
+}
+
 -- Jokers
 
 ---- Common Jokers

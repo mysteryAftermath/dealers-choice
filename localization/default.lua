@@ -25,6 +25,17 @@ return {
                     "{C:dark_edition}+1{} Joker slot",
                 },
             },
+            nox_silver_seal = {
+                name = "Silver Seal",
+                text = {
+                    "Cannot be debuffed",
+                },
+            },
         },
+    },
+    misc={
+        labels={
+            nox_silver_seal = "Silver Seal",
+        }
     }
 }
