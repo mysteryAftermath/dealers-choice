@@ -536,6 +536,9 @@ SMODS.Joker {
 				xmult = card.ability.extra.xmult + G.GAME.nox_rasputin
 			}
 		end
+		if context.blueprint and context.selling_self then
+			G.GAME.nox_rasputin = G.GAME.nox_rasputin + card.ability.extra.bonus_xmult
+		end
 	end,
 	remove_from_deck = function(self, card, from_debuff)
 		if not from_debuff then
