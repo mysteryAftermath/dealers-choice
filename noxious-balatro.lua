@@ -761,6 +761,47 @@ SMODS.Joker {
 	end
 }
 
+--[[ Sidewalk
+	The first played card 
+	of each rank gives 
+	X1.1 Chips when scored
+]]
+SMODS.Joker {
+    key = "sidewalk",
+	loc_txt = {
+		name = 'Sidewalk',
+		text = {
+			"The first played card",
+			"of each {C:attention}rank{} gives ",
+			"{X:chips,C:white}X#1#{} chips when scored",
+		}
+	},
+	atlas = 'noxious-balatro',
+    pos = { x = 2, y = 0 },
+    rarity = 2,
+    blueprint_compat = true,
+    cost = 5,
+    config = { extra = { xchips = 1.1 } },
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.xchips } }
+    end,
+    calculate = function(self, card, context)
+		if context.before then
+			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = {}
+		end
+        if context.individual and context.cardarea == G.play and not G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] then
+			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] = true
+            return {
+                xchips = card.ability.extra.xchips
+            }
+        end
+    end,
+	add_to_deck = function (self, card, from_debuff)
+		if not G.GAME.nox_sidewalk_scored_ranks then
+			G.GAME.nox_sidewalk_scored_ranks = {}
+		end
+	end
+}
 ---- Rare Jokers
 
 --[[ Turnabout
