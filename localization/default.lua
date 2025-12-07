@@ -28,7 +28,8 @@ return {
             nox_silver_seal = {
                 name = "Silver Seal",
                 text = {
-                    "Cannot be debuffed",
+                    "This card cannot",
+                    "be debuffed",
                 },
             },
         },
