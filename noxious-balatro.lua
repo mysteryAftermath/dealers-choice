@@ -814,7 +814,7 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Pedigree',
 		text = {
-			"Common Jokers may not appear",
+			"{C:common}Common{} Jokers may not appear",
 		}
 	},
 	atlas = 'noxious-balatro',
