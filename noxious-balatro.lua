@@ -802,6 +802,42 @@ SMODS.Joker {
 		end
 	end
 }
+
+--[[ Pedigree
+	Common Jokers may not appear
+]]
+SMODS.Joker {
+    key = "pedigree",
+	loc_txt = {
+		name = 'Pedigree',
+		text = {
+			"Common Jokers may not appear",
+		}
+	},
+	atlas = 'noxious-balatro',
+    pos = { x = 0, y = 0 },
+    rarity = 2,
+    blueprint_compat = false,
+    cost = 6,
+    config = { extra = { common_weight = 0 } },
+	add_to_deck = function (self, card, from_debuff)
+		if not G.GAME.nox_pedigree then
+			G.GAME.nox_pedigree = 1
+			G.GAME.common_mod = 0
+		else
+			G.GAME.nox_pedigree = G.GAME.nox_pedigree + 1
+		end
+	end,
+	remove_from_deck = function (self, card, from_debuff)
+		if G.GAME.nox_pedigree > 1 then
+			G.GAME.nox_pedigree = G.GAME.nox_pedigree - 1
+		else
+			G.GAME.nox_pedigree = nil
+			G.GAME.common_mod = 1
+		end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
