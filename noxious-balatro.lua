@@ -815,7 +815,7 @@ SMODS.Joker {
 		}
 	},
 	atlas = 'noxious-balatro',
-    pos = { x = 0, y = 0 },
+    pos = { x = 3, y = 0 },
     rarity = 2,
     blueprint_compat = false,
     cost = 6,
