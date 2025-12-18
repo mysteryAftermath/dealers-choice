@@ -705,7 +705,7 @@ SMODS.Joker {
 	config = { extra = { xmult = 0.2 } },
 	rarity = 2,
 	atlas = 'noxious-balatro',
-	pos = { x = 0, y = 0 },
+	pos = { x = 4, y = 0 },
 	cost = 5,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
