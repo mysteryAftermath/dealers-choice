@@ -999,8 +999,8 @@ SMODS.Joker {
 }
 
 --[[ No Suprises
-	Events with a probability of 1 in 4 or higher always occur
-	Events with a probability less than 1 in 4 never occur
+	Events with a probability of 1 in 5 or higher always occur
+	Events with a probability less than 1 in 5 never occur
 ]]
 G.nox_nosuprises_threshold = 5
 SMODS.Joker {
