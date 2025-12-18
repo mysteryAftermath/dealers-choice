@@ -795,16 +795,6 @@ SMODS.Joker {
 			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] = true
 			G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] + 1
 			local retmsg = ""
-			local hopscotch_colors = {
-				HEX('d6f8ff'),
-				HEX('c7e5ff'),
-				HEX('ffd6f8'),
-				HEX('a2ffaf'),
-				HEX('f4ffa4'),
-				HEX('f5e4ff'),
-				HEX('ffbc7e'),
-				HEX('ff9b9b'),
-			}
 			if G.GAME.nox_sidewalk_message then
 				retmsg = card.ability.extra.message_a
 				G.GAME.nox_sidewalk_message = nil
@@ -813,9 +803,8 @@ SMODS.Joker {
 				G.GAME.nox_sidewalk_message = true
 			end
             return {
-                --xchips = card.ability.extra.xchips
 				message = retmsg,
-				colour = hopscotch_colors[ math.random( #hopscotch_colors ) ]
+				colour = G.GAME.nox_hopscotch_colors[ math.random( #G.GAME.nox_hopscotch_colors ) ]
             }
         end
 		if context.joker_main then
@@ -830,6 +819,18 @@ SMODS.Joker {
 		end
 		if not G.GAME.nox_sidewalk_score then
 			G.GAME.nox_sidewalk_score = {}
+		end
+		if not G.GAME.nox_hopscotch_colors then
+			G.GAME.nox_hopscotch_colors = {
+				HEX('d6f8ff'),
+				HEX('c7e5ff'),
+				HEX('ffd6f8'),
+				HEX('a2ffaf'),
+				HEX('f4ffa4'),
+				HEX('f5e4ff'),
+				HEX('ffbc7e'),
+				HEX('ff9b9b'),
+			}
 		end
 	end
 }
