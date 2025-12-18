@@ -54,7 +54,7 @@ end
 local sprp = SMODS.pseudorandom_probability
 function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
 	local numerator, denominator = SMODS.get_probability_vars(trigger_obj, base_numerator, base_denominator, identifier or seed, true, no_mod)
-	if G.GAME.nox_nosuprises then return numerator / denominator >= 0.25 end
+	if G.GAME.nox_nosuprises then return numerator / denominator >= (1 / G.nox_nosuprises_threshold ) end
 	local ret = sprp(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
 	return ret
 end
@@ -1002,13 +1002,14 @@ SMODS.Joker {
 	Events with a probability of 1 in 4 or higher always occur
 	Events with a probability less than 1 in 4 never occur
 ]]
+G.nox_nosuprises_threshold = 5
 SMODS.Joker {
 	key = 'nosuprises',
 	loc_txt = {
 		name = 'No Suprises',
 		text = {
-			"Events with a {C:green}probability{} of {C:green}1{} in {C:green}4{} or higher {C:attention}always{} occur",
-			"Events with a {C:green}probability{} less than {C:green}1{} in {C:green}4{} {C:attention}never{} occur"
+			"Events with a {C:green}probability{} of {C:green}1{} in {C:green}#1#{} or higher {C:attention}always{} occur",
+			"Events with a {C:green}probability{} less than {C:green}1{} in {C:green}#1#{} {C:attention}never{} occur"
 		}
 	},
 	rarity = 3,
@@ -1017,7 +1018,7 @@ SMODS.Joker {
 	cost = 8,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		return {}
+		return { vars = { G.nox_nosuprises_threshold } }
 	end,
 	add_to_deck = function(self, card, from_debuff)
         if G.GAME.nox_nosuprises then
