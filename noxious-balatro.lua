@@ -765,18 +765,16 @@ SMODS.Joker {
 }
 
 --[[ Sidewalk
-	The first played card of 
-	each rank gives X1.1 Chips 
-	when scored for the first time
+	Gives X0.1 chips for each unique
+	scoring rank in the current hand
 ]]
 SMODS.Joker {
     key = "sidewalk",
 	loc_txt = {
 		name = 'Sidewalk',
 		text = {
-			"The first played card of",
-			"each {C:attention}rank{} gives {X:chips,C:white}X#1#{} chips",
-			"when scored for the first time",
+			"Gives {X:chips,C:white}X#1#{} chips for each unique",
+			"scoring {C:attention}rank{} in the {C:attention}current hand{}",
 		}
 	},
 	atlas = 'noxious-balatro',
@@ -784,24 +782,54 @@ SMODS.Joker {
     rarity = 2,
     blueprint_compat = true,
     cost = 5,
-    config = { extra = { xchips = 1.1 } },
+    config = { extra = { xchips = 0.1, message_a = "Hop", message_b = "Skip" } },
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.xchips } }
     end,
     calculate = function(self, card, context)
 		if context.before then
 			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = {}
+			G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = 0
 		end
         if context.individual and context.cardarea == G.play and not G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] then
 			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] = true
+			G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] + 1
+			local retmsg = ""
+			local hopscotch_colors = {
+				HEX('d6f8ff'),
+				HEX('c7e5ff'),
+				HEX('ffd6f8'),
+				HEX('a2ffaf'),
+				HEX('f4ffa4'),
+				HEX('f5e4ff'),
+				HEX('ffbc7e'),
+				HEX('ff9b9b'),
+			}
+			if G.GAME.nox_sidewalk_message then
+				retmsg = card.ability.extra.message_a
+				G.GAME.nox_sidewalk_message = nil
+			else
+				retmsg = card.ability.extra.message_b
+				G.GAME.nox_sidewalk_message = true
+			end
             return {
-                xchips = card.ability.extra.xchips
+                --xchips = card.ability.extra.xchips
+				message = retmsg,
+				colour = hopscotch_colors[ math.random( #hopscotch_colors ) ]
             }
         end
+		if context.joker_main then
+			return {
+				xchips = 1 + G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] * card.ability.extra.xchips
+			}
+		end
     end,
 	add_to_deck = function (self, card, from_debuff)
 		if not G.GAME.nox_sidewalk_scored_ranks then
 			G.GAME.nox_sidewalk_scored_ranks = {}
+		end
+		if not G.GAME.nox_sidewalk_score then
+			G.GAME.nox_sidewalk_score = {}
 		end
 	end
 }
