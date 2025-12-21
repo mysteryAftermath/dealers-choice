@@ -721,21 +721,19 @@ SMODS.Joker {
 }
 
 --[[ Lucky Sevens
-	Gives a chance to gain $7 based on
-	number of scoring 7s in played hand
-	(Currently 1 in 7 for each 7)
+	Played Sevens have a 1 in 7 chance to give
+	+7 chips, +7 Mult or +$7 when scored
 ]]
 SMODS.Joker {
 	key = '777',
 	loc_txt = {
 		name = 'Lucky Sevens',
 		text = {
-			"Gives a chance to gain {C:money}$#3#{} based on",
-			"number of scoring {C:attention}7s{} in {C:attention}played hand",
-			"{C:inactive}(Currently {C:green}#1#{} {C:inactive}in {C:green}#2#{} {C:inactive}for each {C:attention}7{C:inactive})"
+			"Played {C:attention}Sevens{} have a {C:green}#1#{} in {C:green}#2#{} chance to give",
+			"{C:chips}+#3#{} chips, {C:mult}+#3#{} Mult or {C:money}$#3#{} when scored"
 		}
 	},
-	config = { extra = { chance = 1, odds = 7, cash = 7 } },
+	config = { extra = { chance = 1, odds = 7, jackpot = 7 } },
 	rarity = 2,
 	atlas = 'noxious-balatro',
 	pos = { x = 8, y = 1 },
@@ -743,22 +741,23 @@ SMODS.Joker {
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
 		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
-		return { vars = { numerator, denominator, card.ability.extra.cash } }
+		return { vars = { numerator, denominator, card.ability.extra.jackpot } }
 	end,
 	calculate = function(self, card, context)
-		if context.before then
-			local sevens = 0
-			for _, playing_card in ipairs(context.scoring_hand) do
-                if playing_card:get_id() == 7 then
-					sevens = sevens + 1
-                end
-            end
-			if sevens > 0 and SMODS.pseudorandom_probability(card, 'nox_777', sevens, card.ability.extra.odds) then
-				ease_dollars(card.ability.extra.cash, nil)
-				return {
-					message = "Jackpot!",
-					colour = G.C.MONEY
-				}
+		if context.individual and context.cardarea == G.play then
+			if context.other_card:get_id() == 7 and SMODS.pseudorandom_probability(card, 'nox_777', card.ability.extra.chance, card.ability.extra.odds) then
+				local reward = math.random(3)
+				if reward == 1 then
+					return {
+						chips = card.ability.extra.jackpot
+					}
+				elseif reward == 2 then
+					return {
+						mult = card.ability.extra.jackpot
+					}
+				elseif reward == 3 then
+					ease_dollars(card.ability.extra.jackpot)
+				end
 			end
 		end
 	end
