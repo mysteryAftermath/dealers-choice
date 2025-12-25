@@ -868,6 +868,89 @@ SMODS.Joker {
 	end
 }
 
+--[[ Scalper
+	Only Mega Booster Packs 
+	may appear in shops
+]]
+SMODS.Joker {
+    key = "scalper",
+	loc_txt = {
+		name = 'Scalper',
+		text = {
+			"Only {C:attention}Mega{} Booster Packs",
+			"may appear in shops"
+		}
+	},
+	atlas = 'noxious-balatro',
+    pos = { x = 5, y = 0 },
+    rarity = 2,
+    blueprint_compat = false,
+    cost = 7,
+    config = { extra = { } },
+	add_to_deck = function (self, card, from_debuff)
+		if not G.GAME.scalper then
+			G.GAME.nox_scalper = 1
+			G.GAME.banned_keys.p_arcana_normal_1 = true
+			G.GAME.banned_keys.p_arcana_normal_2 = true
+			G.GAME.banned_keys.p_arcana_normal_3 = true
+			G.GAME.banned_keys.p_arcana_normal_4 = true
+			G.GAME.banned_keys.p_arcana_jumbo_1 = true
+			G.GAME.banned_keys.p_arcana_jumbo_2 = true
+			G.GAME.banned_keys.p_celestial_normal_1 = true
+			G.GAME.banned_keys.p_celestial_normal_2 = true
+			G.GAME.banned_keys.p_celestial_normal_3 = true
+			G.GAME.banned_keys.p_celestial_normal_4 = true
+			G.GAME.banned_keys.p_celestial_jumbo_1 = true
+			G.GAME.banned_keys.p_celestial_jumbo_2 = true
+			G.GAME.banned_keys.p_spectral_normal_1 = true
+			G.GAME.banned_keys.p_spectral_normal_2 = true
+			G.GAME.banned_keys.p_spectral_jumbo_1 = true
+			G.GAME.banned_keys.p_standard_normal_1 = true
+			G.GAME.banned_keys.p_standard_normal_2 = true
+			G.GAME.banned_keys.p_standard_normal_3 = true
+			G.GAME.banned_keys.p_standard_normal_4 = true
+			G.GAME.banned_keys.p_standard_jumbo_1 = true
+			G.GAME.banned_keys.p_standard_jumbo_2 = true
+			G.GAME.banned_keys.p_buffoon_normal_1 = true
+			G.GAME.banned_keys.p_buffoon_normal_2 = true
+			G.GAME.banned_keys.p_buffoon_jumbo_1 = true
+		else
+			G.GAME.nox_scalper = G.GAME.nox_scalper + 1
+		end
+	end,
+	remove_from_deck = function (self, card, from_debuff)
+		if G.GAME.nox_scalper > 1 then
+			G.GAME.nox_scalper = G.GAME.nox_scalper - 1
+		else
+			G.GAME.nox_scalper = nil
+			G.GAME.banned_keys.p_arcana_normal_1 = nil
+			G.GAME.banned_keys.p_arcana_normal_2 = nil
+			G.GAME.banned_keys.p_arcana_normal_3 = nil
+			G.GAME.banned_keys.p_arcana_normal_4 = nil
+			G.GAME.banned_keys.p_arcana_jumbo_1 = nil
+			G.GAME.banned_keys.p_arcana_jumbo_2 = nil
+			G.GAME.banned_keys.p_celestial_normal_1 = nil
+			G.GAME.banned_keys.p_celestial_normal_2 = nil
+			G.GAME.banned_keys.p_celestial_normal_3 = nil
+			G.GAME.banned_keys.p_celestial_normal_4 = nil
+			G.GAME.banned_keys.p_celestial_jumbo_1 = nil
+			G.GAME.banned_keys.p_celestial_jumbo_2 = nil
+			G.GAME.banned_keys.p_spectral_normal_1 = nil
+			G.GAME.banned_keys.p_spectral_normal_2 = nil
+			G.GAME.banned_keys.p_spectral_jumbo_1 = nil
+			G.GAME.banned_keys.p_standard_normal_1 = nil
+			G.GAME.banned_keys.p_standard_normal_2 = nil
+			G.GAME.banned_keys.p_standard_normal_3 = nil
+			G.GAME.banned_keys.p_standard_normal_4 = nil
+			G.GAME.banned_keys.p_standard_jumbo_1 = nil
+			G.GAME.banned_keys.p_standard_jumbo_2 = nil
+			G.GAME.banned_keys.p_buffoon_normal_1 = nil
+			G.GAME.banned_keys.p_buffoon_normal_2 = nil
+			G.GAME.banned_keys.p_buffoon_jumbo_1 = nil
+		end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
