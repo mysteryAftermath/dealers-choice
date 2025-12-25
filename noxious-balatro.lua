@@ -756,6 +756,10 @@ SMODS.Joker {
 					}
 				elseif reward == 3 then
 					ease_dollars(card.ability.extra.jackpot)
+					return {
+						message = "$" .. tostring(card.ability.extra.jackpot),
+						colour = G.C.MONEY
+					}
 				end
 			end
 		end
