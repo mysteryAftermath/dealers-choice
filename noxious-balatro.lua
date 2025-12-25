@@ -721,31 +721,30 @@ SMODS.Joker {
 }
 
 --[[ Lucky Sevens
-	Played Sevens have a 1 in 7 chance to give
-	+7 chips, +7 Mult or +$7 when scored
+	Played Sevens either give +7 chips,
+	+7 Mult, or +$7 when scored
 ]]
 SMODS.Joker {
 	key = '777',
 	loc_txt = {
 		name = 'Lucky Sevens',
 		text = {
-			"Played {C:attention}Sevens{} have a {C:green}#1#{} in {C:green}#2#{} chance to give",
-			"{C:chips}+#3#{} chips, {C:mult}+#3#{} Mult or {C:money}$#3#{} when scored"
+			"Played {C:attention}Sevens{} either give {C:chips}+#1#{} chips,",
+			"{C:mult}+#1#{} Mult or {C:money}$#1#{} when scored"
 		}
 	},
-	config = { extra = { chance = 1, odds = 7, jackpot = 7 } },
+	config = { extra = { jackpot = 7 } },
 	rarity = 2,
 	atlas = 'noxious-balatro',
 	pos = { x = 8, y = 1 },
 	cost = 5,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
-		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_777')
-		return { vars = { numerator, denominator, card.ability.extra.jackpot } }
+		return { vars = { card.ability.extra.jackpot } }
 	end,
 	calculate = function(self, card, context)
 		if context.individual and context.cardarea == G.play then
-			if context.other_card:get_id() == 7 and SMODS.pseudorandom_probability(card, 'nox_777', card.ability.extra.chance, card.ability.extra.odds) then
+			if context.other_card:get_id() == 7 then
 				local reward = math.random(3)
 				if reward == 1 then
 					return {
