@@ -504,8 +504,8 @@ SMODS.Joker {
 
 --[[ Rasputin
 	X2 Mult
-	X1 Mult for each time this card
-	is destroyed or sold this run
+	X2 Mult for each time this card
+	was destroyed or sold this run
 ]]
 SMODS.Joker {
 	key = 'rasputin',
@@ -514,14 +514,14 @@ SMODS.Joker {
 		text = {
 			"{X:mult,C:white}X#1#{} Mult",
 			"{X:mult,C:white}X#2#{} Mult for each time this card",
-			"is {C:attention}destroyed{} or {C:attention}sold{} this run"
+			"was {C:attention}destroyed{} or {C:attention}sold{} this run"
 		}
 	},
-	config = { extra = { xmult = 2, bonus_xmult = 1 } },
+	config = { extra = { xmult = 2, bonus_xmult = 2 } },
 	rarity = 2,
 	atlas = 'noxious-balatro',
 	pos = { x = 7, y = 2 },
-	cost = 5,
+	cost = 6,
 	blueprint_compat = true,
 	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
