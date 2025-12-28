@@ -124,7 +124,7 @@ SMODS.Consumable {
 		}
 	},
 	atlas = 'noxious-balatro',
-    pos = { x = 0, y = 5 },
+    pos = { x = 1, y = 5 },
     config = { extra = { seal = 'nox_Silver' }, max_highlighted = 1 },
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue + 1] = G.P_SEALS[card.ability.extra.seal]
