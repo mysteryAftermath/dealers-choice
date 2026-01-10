@@ -955,6 +955,54 @@ SMODS.Joker {
 	end
 }
 
+--[[ Kitchen Sink
+	When Blind is selected gain all unused
+	discards from the previous round
+	(Currently 0)
+]]
+SMODS.Joker {
+	key = 'letthatsinkin',
+	loc_txt = {
+		name = 'Kitchen Sink',
+		text = {
+			"When {C:attention}Blind{} is selected, gain all unused",
+			"discards from the previous round",
+			"{C:inactive}(Will give {C:red}+#1#{C:inactive} Discards next blind)"
+		}
+	},
+	config = { extra = { discards = 0, display_discards = 0 } },
+	rarity = 2,
+	atlas = 'noxious-balatro',
+	pos = { x = 6, y = 0 },
+	cost = 4,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.display_discards } }
+	end,
+	calculate = function(self, card, context)
+		if context.setting_blind and card.ability.extra.discards > 0 then
+			if not context.blueprint then
+				card.ability.extra.display_discards = 0
+			end
+			ease_discard(card.ability.extra.discards)
+			return {
+				message = '+' .. tostring(card.ability.extra.discards) .. ' Discards',
+				colour = G.C.FILTER,
+				card = card
+			}
+		end
+        if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and context.game_over == false then
+			card.ability.extra.discards = G.GAME.current_round.discards_left
+			card.ability.extra.display_discards = card.ability.extra.discards
+            return {
+                message = 'Let that sink in...',
+				colour = G.C.RED,
+				card = card
+            }
+        end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
