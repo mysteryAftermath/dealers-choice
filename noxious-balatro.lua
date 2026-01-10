@@ -1020,54 +1020,47 @@ SMODS.Joker {
 			"{C:inactive}(Will give {C:blue}+#1#{C:inactive} Hands next blind)"
 		}
 	},
-	config = { extra = { hands = 0, hands_last = 0 } },
+	config = { extra = { display_hands = 0, hands = 0 } },
 	rarity = 3,
 	atlas = 'noxious-balatro',
 	pos = { x = 4, y = 1 },
 	cost = 10,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.hands, card.ability.extra.hands_last } }
+		return { vars = { card.ability.extra.display_hands } }
 	end,
 	calculate = function(self, card, context)
-		if context.setting_blind and card.ability.extra.hands > 0 and context.blueprint then
+		if context.setting_blind and card.ability.extra.hands > 0 then
+			if not context.blueprint then
+				card.ability.extra.display_hands = 0
+			end
 			ease_hands_played(card.ability.extra.hands)
-			local hand_msg = card.ability.extra.hands
-            return {
-				message = '+' .. tostring(hand_msg) .. ' Hands',
+			return {
+				message = '+' .. tostring(card.ability.extra.hands) .. ' Hands',
 				colour = G.C.FILTER,
 				card = card
 			}
-        end
-
-        if context.setting_blind and card.ability.extra.hands > 0 and not context.blueprint then
-			ease_hands_played(card.ability.extra.hands)
-			card.ability.extra.hands_last = card.ability.extra.hands
-			card.ability.extra.hands = 0
-            return {
-				message = '+' .. tostring(card.ability.extra.hands_last) .. ' Hands',
-				colour = G.C.FILTER,
-				card = card
-			}
-        end
-
-        if context.end_of_round and context.cardarea == G.jokers and not G.GAME.blind.boss and not context.blueprint and context.game_over == false then
-            card.ability.extra.hands = G.GAME.current_round.hands_left
-			ease_hands_played(-G.GAME.current_round.hands_left)
-            return {
-                message = 'Hold It!',
-				colour = G.C.BLUE,
-				card = card
-            }
-        end
-
-		if context.end_of_round and context.cardarea == G.jokers and G.GAME.blind.boss and not context.blueprint and context.game_over == false then
-			card.ability.extra.hands_last = 0
-            return {
-                message = 'Adjourned!',
-				colour = G.C.FILTER,
-				card = card
-            }
+		end
+        if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and context.game_over == false then
+			if G.GAME.blind.boss then
+				card.ability.extra.hands = 0
+				card.ability.extra.display_hands = card.ability.extra.hands
+            	return {
+            	    message = 'Adjourned!',
+					colour = G.C.FILTER,
+					card = card
+            	}
+			else
+				card.ability.extra.hands = G.GAME.current_round.hands_left
+				card.ability.extra.display_hands = card.ability.extra.hands
+				ease_hands_played(-G.GAME.current_round.hands_left)
+            	return {
+            	    message = 'Hold It!',
+					colour = G.C.BLUE,
+					card = card
+            	}
+			end
+			
         end
 	end
 }
