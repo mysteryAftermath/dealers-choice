@@ -8,6 +8,8 @@ Requires [Steamodded](https://github.com/Steamodded/smods/releases/latest)
 
 Adds 19 Jokers, 1 Spectral Card, and 1 Seal as of version 1.0.0.
 
+You can find full details [here.](https://docs.google.com/document/d/1hKXrfDhfFaUq5a1z63INJxVhS0jty3_npE-oV7sSuro/)
+
 ## Contributors
 - NOX: Lead Designer, Lead Artist
 - mysteryAftermath: Lead Developer, Designer, Artist
