@@ -1,0 +1,13 @@
+{
+    "id": "DEALERSCHOICE",
+    "name": "Dealer's Choice",
+    "author": ["NOX","escapeRoute42"],
+    "description": "A vanilla style expansion for Balatro",
+    "prefix": "deacho",
+    "main_file": "dealers-choice.lua",
+    "badge_colour": "0b77ea",
+    "dependencies": [
+        "Steamodded (>=1.0.0~ALPHA-1225a)"
+    ],
+    "version": "1.0.0"
+}

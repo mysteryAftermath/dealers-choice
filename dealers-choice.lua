@@ -1,8 +1,8 @@
 SMODS.Atlas {
 	-- Key for code to find it with
-	key = "noxious-balatro",
+	key = "dealers-choice",
 	-- The name of the file, for the code to pull the atlas from
-	path = "noxious-balatro.png",
+	path = "dealers-choice.png",
 	-- Width of each sprite in 1x size
 	px = 71,
 	-- Height of each sprite in 1x size
@@ -35,7 +35,7 @@ function SMODS.calculate_individual_effect(effect, scored_card, key, amount, fro
 		and amount ~= 1
 		and mult
 	then
-		SMODS.calculate_context({nox_xmult = true})
+		SMODS.calculate_context({deacho_xmult = true})
 	end
 	return ret
 end
@@ -44,7 +44,7 @@ end
 local ed = ease_dollars
 function ease_dollars(mod, instant)
 	if mod < 0 then
-		SMODS.calculate_context({nox_spend_money = true, nox_spent_money = -mod})
+		SMODS.calculate_context({deacho_spend_money = true, deacho_spent_money = -mod})
 	end
 	local ret = ed(mod, instant)
 	return ret
@@ -54,7 +54,7 @@ end
 local sprp = SMODS.pseudorandom_probability
 function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
 	local numerator, denominator = SMODS.get_probability_vars(trigger_obj, base_numerator, base_denominator, identifier or seed, true, no_mod)
-	if G.GAME.nox_nosuprises then return numerator / denominator >= (1 / G.nox_nosuprises_threshold ) end
+	if G.GAME.deacho_nosuprises then return numerator / denominator >= (1 / G.deacho_nosuprises_threshold ) end
 	local ret = sprp(trigger_obj, seed, base_numerator, base_denominator, identifier, no_mod)
 	return ret
 end
@@ -63,11 +63,11 @@ end
 local cgid = Card.get_id
 function Card:get_id()
 	local ret = cgid(self)
-	if G.GAME.nox_proxy and not SMODS.has_no_rank(self) then
+	if G.GAME.deacho_proxy and not SMODS.has_no_rank(self) then
 		--local prox_val = self.base.id
-		for proxy_instance, proxy_value_a in pairs(G.GAME.nox_proxy_a) do
-			--if prox_val == proxy_value_a then prox_val = G.GAME.nox_proxy_b[proxy_instance] end
-			if self.base.id == proxy_value_a then return G.GAME.nox_proxy_b[proxy_instance] end
+		for proxy_instance, proxy_value_a in pairs(G.GAME.deacho_proxy_a) do
+			--if prox_val == proxy_value_a then prox_val = G.GAME.deacho_proxy_b[proxy_instance] end
+			if self.base.id == proxy_value_a then return G.GAME.deacho_proxy_b[proxy_instance] end
 		end
 		--return prox_val
 	end
@@ -78,7 +78,7 @@ local csdbf = Card.set_debuff
 function Card:set_debuff(should_debuff)
 	local ret = csdbf(self, should_debuff)
 
-	if self.seal and self.seal == "nox_Silver" then
+	if self.seal and self.seal == "deacho_Silver" then
 		self.debuff = false
 		return
 	end
@@ -93,7 +93,7 @@ end
 ]]
 SMODS.Seal {
     key = 'Silver',
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
     pos = { x = 0, y = 6 },
     badge_colour = G.C.EDITION,
     draw = function(self, card, layer)
@@ -123,9 +123,9 @@ SMODS.Consumable {
 			"card in your hand",
 		}
 	},
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
     pos = { x = 1, y = 5 },
-    config = { extra = { seal = 'nox_Silver' }, max_highlighted = 1 },
+    config = { extra = { seal = 'deacho_Silver' }, max_highlighted = 1 },
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue + 1] = G.P_SEALS[card.ability.extra.seal]
         return { vars = { card.ability.max_highlighted } }
@@ -181,7 +181,7 @@ SMODS.Joker {
 	},
 	config = { extra = { cards = 5 } },
 	rarity = 1,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 2, y = 1 },
 	cost = 3,
 	blueprint_compat = true,
@@ -220,7 +220,7 @@ SMODS.Joker {
 	},
 	config = { extra = { mult = 2 }, active = nil },
 	rarity = 1,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 0, y = 1 },
 	cost = 3,
 	blueprint_compat = true,
@@ -259,7 +259,7 @@ SMODS.Joker {
 	},
 	config = { extra = { chips = 10 }, active = nil },
 	rarity = 1,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 1, y = 1 },
 	cost = 3,
 	blueprint_compat = true,
@@ -298,7 +298,7 @@ SMODS.Joker {
 	},
 	config = { extra = { selection = 1 } },
 	rarity = 1,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 6, y = 2 },
 	cost = 3,
 	blueprint_compat = true,
@@ -349,38 +349,38 @@ SMODS.Joker {
 	},
 	config = { extra = { proxy_a = 0, proxy_b = 0 } },
 	rarity = 1,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 1, y = 0 },
 	cost = 3,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if not G.GAME.nox_proxy or card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
+		if not G.GAME.deacho_proxy or card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
 			return { vars = { 'X', 'Y' } }
 		end
 		return { vars = { rank_to_string(card.ability.extra.proxy_a), rank_to_string(card.ability.extra.proxy_b) } }
 	end,
 	add_to_deck = function(self, card, from_debuff)
-        if not G.GAME.nox_proxy then G.GAME.nox_proxy = 0 end
-		G.GAME.nox_proxy = G.GAME.nox_proxy + 1
+        if not G.GAME.deacho_proxy then G.GAME.deacho_proxy = 0 end
+		G.GAME.deacho_proxy = G.GAME.deacho_proxy + 1
 		if not from_debuff then
-			if not G.GAME.nox_proxy_a then G.GAME.nox_proxy_a = {} end
-			if not G.GAME.nox_proxy_b then G.GAME.nox_proxy_b = {} end
+			if not G.GAME.deacho_proxy_a then G.GAME.deacho_proxy_a = {} end
+			if not G.GAME.deacho_proxy_b then G.GAME.deacho_proxy_b = {} end
 			card.ability.extra.proxy_a = math.random(2, SMODS.Rank.max_id.value)
 			card.ability.extra.proxy_b = math.random(2, SMODS.Rank.max_id.value)
 			if card.ability.extra.proxy_b == card.ability.extra.proxy_a then
 				card.ability.extra.proxy_b = card.ability.extra.proxy_b < 14 and card.ability.extra.proxy_b + 1 or 2
 			end
 		end
-		G.GAME.nox_proxy_a[card.sort_id] = card.ability.extra.proxy_a
-		G.GAME.nox_proxy_b[card.sort_id] = card.ability.extra.proxy_b
+		G.GAME.deacho_proxy_a[card.sort_id] = card.ability.extra.proxy_a
+		G.GAME.deacho_proxy_b[card.sort_id] = card.ability.extra.proxy_b
     end,
     remove_from_deck = function(self, card, from_debuff)
-		G.GAME.nox_proxy_a[card.sort_id] = nil
-		G.GAME.nox_proxy_b[card.sort_id] = nil
-		if G.GAME.nox_proxy > 1 then
-        	G.GAME.nox_proxy = G.GAME.nox_proxy - 1
+		G.GAME.deacho_proxy_a[card.sort_id] = nil
+		G.GAME.deacho_proxy_b[card.sort_id] = nil
+		if G.GAME.deacho_proxy > 1 then
+        	G.GAME.deacho_proxy = G.GAME.deacho_proxy - 1
 		else
-			G.GAME.nox_proxy = nil
+			G.GAME.deacho_proxy = nil
 		end
 	end
 }
@@ -401,7 +401,7 @@ SMODS.Joker {
 	},
 	config = { extra = { cards = 0 }, active = nil },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 3, y = 1 },
 	cost = 5,
 	blueprint_compat = true,
@@ -447,13 +447,13 @@ SMODS.Joker {
 	},
 	config = { extra = { chance = 1, odds = 8, upgrade = 1, xmult = 2 } },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 6, y = 1 },
 	cost = 6,
 	blueprint_compat = true,
 	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
-		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'nox_deathbed')
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'deacho_deathbed')
 		return { vars = { numerator, denominator, card.ability.extra.upgrade } }
 	end,
 	calculate = function(self, card, context)
@@ -463,7 +463,7 @@ SMODS.Joker {
 			}
 		end
 		if context.end_of_round and context.game_over == false then
-			if SMODS.pseudorandom_probability(card, 'nox_deathbed', card.ability.extra.chance, card.ability.extra.odds) then
+			if SMODS.pseudorandom_probability(card, 'deacho_deathbed', card.ability.extra.chance, card.ability.extra.odds) then
 				local hands_list = {}
 				for k, v in pairs(G.GAME.hands) do
 					if v["visible"] == true then
@@ -519,30 +519,30 @@ SMODS.Joker {
 	},
 	config = { extra = { xmult = 2, bonus_xmult = 2 } },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 7, y = 2 },
 	cost = 6,
 	blueprint_compat = true,
 	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if G.GAME.nox_rasputin == nil then
-			G.GAME.nox_rasputin = 0
+		if G.GAME.deacho_rasputin == nil then
+			G.GAME.deacho_rasputin = 0
 		end
-		return { vars = { card.ability.extra.xmult + G.GAME.nox_rasputin, card.ability.extra.bonus_xmult } }
+		return { vars = { card.ability.extra.xmult + G.GAME.deacho_rasputin, card.ability.extra.bonus_xmult } }
 	end,
 	calculate = function(self, card, context)
 		if context.joker_main then
 			return {
-				xmult = card.ability.extra.xmult + G.GAME.nox_rasputin
+				xmult = card.ability.extra.xmult + G.GAME.deacho_rasputin
 			}
 		end
 		if context.blueprint and context.selling_self then
-			G.GAME.nox_rasputin = G.GAME.nox_rasputin + card.ability.extra.bonus_xmult
+			G.GAME.deacho_rasputin = G.GAME.deacho_rasputin + card.ability.extra.bonus_xmult
 		end
 	end,
 	remove_from_deck = function(self, card, from_debuff)
 		if not from_debuff then
-			G.GAME.nox_rasputin = G.GAME.nox_rasputin + card.ability.extra.bonus_xmult
+			G.GAME.deacho_rasputin = G.GAME.deacho_rasputin + card.ability.extra.bonus_xmult
 		end
 	end
 }
@@ -563,16 +563,16 @@ SMODS.Joker {
 	},
 	config = { extra = { money_tracker = 0, level = 0, level_cost = 40, foil_chips = 50, holo_mult = 10, poly_xmult = 1.5 } },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 0, y = 2 },
 	soul_pos = { x = -1, y = 0},
 	cost = 6,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if card.ability.extra.level > 0 then info_queue[#info_queue+1] = {key = 'nox_foil', set = 'Other' } end
-		if card.ability.extra.level > 1 then info_queue[#info_queue+1] = {key = 'nox_holo', set = 'Other' } end
-		if card.ability.extra.level > 2 then info_queue[#info_queue+1] = {key = 'nox_poly', set = 'Other' } end
-		if card.ability.extra.level > 3 then info_queue[#info_queue+1] = {key = 'nox_negative', set = 'Other' } end
+		if card.ability.extra.level > 0 then info_queue[#info_queue+1] = {key = 'deacho_foil', set = 'Other' } end
+		if card.ability.extra.level > 1 then info_queue[#info_queue+1] = {key = 'deacho_holo', set = 'Other' } end
+		if card.ability.extra.level > 2 then info_queue[#info_queue+1] = {key = 'deacho_poly', set = 'Other' } end
+		if card.ability.extra.level > 3 then info_queue[#info_queue+1] = {key = 'deacho_negative', set = 'Other' } end
 		local remaining_exp = 0
 		if card.ability.extra.level < 4 then
 			remaining_exp = card.ability.extra.level_cost - card.ability.extra.money_tracker
@@ -593,8 +593,8 @@ SMODS.Joker {
 		 } }
 	end,
 	calculate = function(self, card, context)
-		if not context.blueprint and context.nox_spend_money and card.ability.extra.level < 4 and (context.locked_card == nil or context.locked_card == card) then
-			card.ability.extra.money_tracker = card.ability.extra.money_tracker + context.nox_spent_money
+		if not context.blueprint and context.deacho_spend_money and card.ability.extra.level < 4 and (context.locked_card == nil or context.locked_card == card) then
+			card.ability.extra.money_tracker = card.ability.extra.money_tracker + context.deacho_spent_money
 			if card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 then
 				G.E_MANAGER:add_event(Event({
 					trigger = 'after',
@@ -644,7 +644,7 @@ SMODS.Joker {
 					delay = 0.15,
 					func = function()
 						if card.ability.extra.money_tracker >= card.ability.extra.level_cost and card.ability.extra.level < 4 then
-							SMODS.calculate_context({nox_spend_money = true, nox_spent_money = 0, locked_card = card})
+							SMODS.calculate_context({deacho_spend_money = true, deacho_spent_money = 0, locked_card = card})
 						end
 						card:flip()
 						play_sound('tarot2')
@@ -704,7 +704,7 @@ SMODS.Joker {
 	},
 	config = { extra = { xmult = 0.2 } },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 4, y = 0 },
 	cost = 5,
 	blueprint_compat = true,
@@ -735,7 +735,7 @@ SMODS.Joker {
 	},
 	config = { extra = { jackpot = 7 } },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 8, y = 1 },
 	cost = 5,
 	blueprint_compat = true,
@@ -779,7 +779,7 @@ SMODS.Joker {
 			"scoring {C:attention}rank{} in the {C:attention}current hand{}",
 		}
 	},
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
     pos = { x = 2, y = 0 },
     rarity = 2,
     blueprint_compat = true,
@@ -790,40 +790,40 @@ SMODS.Joker {
     end,
     calculate = function(self, card, context)
 		if context.before then
-			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = {}
-			G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = 0
+			G.GAME.deacho_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = {}
+			G.GAME.deacho_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = 0
 		end
-        if context.individual and context.cardarea == G.play and not G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] then
-			G.GAME.nox_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] = true
-			G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] + 1
+        if context.individual and context.cardarea == G.play and not G.GAME.deacho_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] then
+			G.GAME.deacho_sidewalk_scored_ranks[context.blueprint and context.blueprint_card.sort_id or card.sort_id][context.other_card:get_id()] = true
+			G.GAME.deacho_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] = G.GAME.deacho_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] + 1
 			local retmsg = ""
-			if G.GAME.nox_sidewalk_message then
+			if G.GAME.deacho_sidewalk_message then
 				retmsg = card.ability.extra.message_a
-				G.GAME.nox_sidewalk_message = nil
+				G.GAME.deacho_sidewalk_message = nil
 			else
 				retmsg = card.ability.extra.message_b
-				G.GAME.nox_sidewalk_message = true
+				G.GAME.deacho_sidewalk_message = true
 			end
             return {
 				message = retmsg,
-				colour = G.GAME.nox_hopscotch_colors[ math.random( #G.GAME.nox_hopscotch_colors ) ]
+				colour = G.GAME.deacho_hopscotch_colors[ math.random( #G.GAME.deacho_hopscotch_colors ) ]
             }
         end
 		if context.joker_main then
 			return {
-				xchips = 1 + G.GAME.nox_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] * card.ability.extra.xchips
+				xchips = 1 + G.GAME.deacho_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] * card.ability.extra.xchips
 			}
 		end
     end,
 	add_to_deck = function (self, card, from_debuff)
-		if not G.GAME.nox_sidewalk_scored_ranks then
-			G.GAME.nox_sidewalk_scored_ranks = {}
+		if not G.GAME.deacho_sidewalk_scored_ranks then
+			G.GAME.deacho_sidewalk_scored_ranks = {}
 		end
-		if not G.GAME.nox_sidewalk_score then
-			G.GAME.nox_sidewalk_score = {}
+		if not G.GAME.deacho_sidewalk_score then
+			G.GAME.deacho_sidewalk_score = {}
 		end
-		if not G.GAME.nox_hopscotch_colors then
-			G.GAME.nox_hopscotch_colors = {
+		if not G.GAME.deacho_hopscotch_colors then
+			G.GAME.deacho_hopscotch_colors = {
 				HEX('d6f8ff'),
 				HEX('c7e5ff'),
 				HEX('ffd6f8'),
@@ -848,25 +848,25 @@ SMODS.Joker {
 			"{C:common}Common{} Jokers may not appear",
 		}
 	},
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
     pos = { x = 3, y = 0 },
     rarity = 2,
     blueprint_compat = false,
     cost = 6,
     config = { extra = { common_weight = 0 } },
 	add_to_deck = function (self, card, from_debuff)
-		if not G.GAME.nox_pedigree then
-			G.GAME.nox_pedigree = 1
+		if not G.GAME.deacho_pedigree then
+			G.GAME.deacho_pedigree = 1
 			G.GAME.common_mod = 0
 		else
-			G.GAME.nox_pedigree = G.GAME.nox_pedigree + 1
+			G.GAME.deacho_pedigree = G.GAME.deacho_pedigree + 1
 		end
 	end,
 	remove_from_deck = function (self, card, from_debuff)
-		if G.GAME.nox_pedigree > 1 then
-			G.GAME.nox_pedigree = G.GAME.nox_pedigree - 1
+		if G.GAME.deacho_pedigree > 1 then
+			G.GAME.deacho_pedigree = G.GAME.deacho_pedigree - 1
 		else
-			G.GAME.nox_pedigree = nil
+			G.GAME.deacho_pedigree = nil
 			G.GAME.common_mod = 1
 		end
 	end
@@ -885,7 +885,7 @@ SMODS.Joker {
 			"may appear in shops"
 		}
 	},
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
     pos = { x = 5, y = 0 },
     rarity = 2,
     blueprint_compat = false,
@@ -893,7 +893,7 @@ SMODS.Joker {
     config = { extra = { } },
 	add_to_deck = function (self, card, from_debuff)
 		if not G.GAME.scalper then
-			G.GAME.nox_scalper = 1
+			G.GAME.deacho_scalper = 1
 			G.GAME.banned_keys.p_arcana_normal_1 = true
 			G.GAME.banned_keys.p_arcana_normal_2 = true
 			G.GAME.banned_keys.p_arcana_normal_3 = true
@@ -919,14 +919,14 @@ SMODS.Joker {
 			G.GAME.banned_keys.p_buffoon_normal_2 = true
 			G.GAME.banned_keys.p_buffoon_jumbo_1 = true
 		else
-			G.GAME.nox_scalper = G.GAME.nox_scalper + 1
+			G.GAME.deacho_scalper = G.GAME.deacho_scalper + 1
 		end
 	end,
 	remove_from_deck = function (self, card, from_debuff)
-		if G.GAME.nox_scalper > 1 then
-			G.GAME.nox_scalper = G.GAME.nox_scalper - 1
+		if G.GAME.deacho_scalper > 1 then
+			G.GAME.deacho_scalper = G.GAME.deacho_scalper - 1
 		else
-			G.GAME.nox_scalper = nil
+			G.GAME.deacho_scalper = nil
 			G.GAME.banned_keys.p_arcana_normal_1 = nil
 			G.GAME.banned_keys.p_arcana_normal_2 = nil
 			G.GAME.banned_keys.p_arcana_normal_3 = nil
@@ -972,7 +972,7 @@ SMODS.Joker {
 	},
 	config = { extra = { discards = 0, display_discards = 0 } },
 	rarity = 2,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 6, y = 0 },
 	cost = 4,
 	blueprint_compat = true,
@@ -1022,7 +1022,7 @@ SMODS.Joker {
 	},
 	config = { extra = { display_hands = 0, hands = 0 } },
 	rarity = 3,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 4, y = 1 },
 	cost = 10,
 	blueprint_compat = true,
@@ -1082,7 +1082,7 @@ SMODS.Joker {
 	},
 	config = { extra = { xchips = 1.25 } },
 	rarity = 3,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 5, y = 1 },
 	cost = 8,
 	blueprint_compat = true,
@@ -1090,7 +1090,7 @@ SMODS.Joker {
 		return { vars = { card.ability.extra.xchips } }
 	end,
 	calculate = function(self, card, context)
-		if context.nox_xmult then
+		if context.deacho_xmult then
 			return {
 				xchips = card.ability.extra.xchips
 			}
@@ -1116,7 +1116,7 @@ SMODS.Joker {
 	},
 	config = { extra = { xmult = 0.25, bonus_xmult = 1 } },
 	rarity = 3,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 7, y = 1 },
 	cost = 8,
 	blueprint_compat = true,
@@ -1157,7 +1157,7 @@ SMODS.Joker {
 	Events with a probability of 1 in 5 or higher always occur
 	Events with a probability less than 1 in 5 never occur
 ]]
-G.nox_nosuprises_threshold = 5
+G.deacho_nosuprises_threshold = 5
 SMODS.Joker {
 	key = 'nosuprises',
 	loc_txt = {
@@ -1168,25 +1168,25 @@ SMODS.Joker {
 		}
 	},
 	rarity = 3,
-	atlas = 'noxious-balatro',
+	atlas = 'dealers-choice',
 	pos = { x = 0, y = 3 },
 	cost = 8,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		return { vars = { G.nox_nosuprises_threshold } }
+		return { vars = { G.deacho_nosuprises_threshold } }
 	end,
 	add_to_deck = function(self, card, from_debuff)
-        if G.GAME.nox_nosuprises then
-			G.GAME.nox_nosuprises = G.GAME.nox_nosuprises + 1
+        if G.GAME.deacho_nosuprises then
+			G.GAME.deacho_nosuprises = G.GAME.deacho_nosuprises + 1
 		else
-			G.GAME.nox_nosuprises = 1
+			G.GAME.deacho_nosuprises = 1
 		end
     end,
     remove_from_deck = function(self, card, from_debuff)
-		if G.GAME.nox_nosuprises > 1 then
-        	G.GAME.nox_nosuprises = G.GAME.nox_nosuprises - 1
+		if G.GAME.deacho_nosuprises > 1 then
+        	G.GAME.deacho_nosuprises = G.GAME.deacho_nosuprises - 1
 		else
-			G.GAME.nox_nosuprises = nil
+			G.GAME.deacho_nosuprises = nil
 		end
 	end
 }
