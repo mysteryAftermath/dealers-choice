@@ -1,7 +1,7 @@
 {
     "id": "DEALERSCHOICE",
     "name": "Dealer's Choice",
-    "author": ["NOX","escapeRoute42"],
+    "author": ["NOX","mysteryAftermath"],
     "description": "A vanilla style expansion for Balatro",
     "prefix": "deacho",
     "main_file": "dealers-choice.lua",
