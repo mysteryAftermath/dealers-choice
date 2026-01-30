@@ -1049,7 +1049,7 @@ SMODS.Joker {
 					G.E_MANAGER:add_event(Event({
 						func = function()
 							playing_card:flip()
-							play_sound('tarot1')
+							play_sound('card1')
 							return true
 						end
 					}))
@@ -1060,7 +1060,6 @@ SMODS.Joker {
                 	    func = function()
 							SMODS.modify_rank(playing_card, 1)
                 	        playing_card:flip()
-							play_sound('card1')
                 	        playing_card:juice_up(0.3, 0.3)
 							SMODS.calculate_effect({message = 'Rank Up!', instant = true, colour = G.C.SECONDARY_SET.Tarot}, playing_card)
                 	        return true
