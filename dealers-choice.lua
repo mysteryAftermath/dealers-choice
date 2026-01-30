@@ -1003,6 +1003,87 @@ SMODS.Joker {
 	end
 }
 
+--[[ Gym Membership
+	Scored cards have a 1 in 3
+	chance to increase in rank by 1
+]]
+SMODS.Joker {
+	key = 'gains',
+	loc_txt = {
+		name = 'Gym Membership',
+		text = {
+			"Scored cards have a {C:green}#1#{} in {C:green}#2#{}",
+			"chance to increase in {C:attention}rank{} by {C:attention}#3#{}"
+		}
+	},
+	config = { extra = { chance = 1, odds = 3, gains = 1 } },
+	rarity = 2,
+	atlas = 'dealers-choice',
+	pos = { x = 8, y = 2 },
+	cost = 5,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.odds, 'deacho_gains')
+		return { vars = { numerator, denominator, card.ability.extra.gains } }
+	end,
+	calculate = function(self, card, context)
+		if context.after and context.scoring_hand then
+			for _, playing_card in ipairs(context.scoring_hand) do
+				if SMODS.pseudorandom_probability(card, 'deacho_gains', card.ability.extra.chance, card.ability.extra.odds) then
+					if context.blueprint then
+						G.E_MANAGER:add_event(Event({
+							func = function()
+								context.blueprint_card:juice_up()
+								return true
+							end
+						}))
+					else
+						G.E_MANAGER:add_event(Event({
+							func = function()
+								card:juice_up()
+								return true
+							end
+						}))
+					end
+
+					G.E_MANAGER:add_event(Event({
+						func = function()
+							playing_card:flip()
+							play_sound('tarot1')
+							return true
+						end
+					}))
+
+					G.E_MANAGER:add_event(Event({
+                	    trigger = 'after',
+                	    delay = 0.25,
+                	    func = function()
+							SMODS.modify_rank(playing_card, 1)
+                	        playing_card:flip()
+							play_sound('card1')
+                	        playing_card:juice_up(0.3, 0.3)
+							SMODS.calculate_effect({message = 'Rank Up!', instant = true, colour = G.C.SECONDARY_SET.Tarot}, playing_card)
+                	        return true
+                	    end
+                	}))
+
+					G.E_MANAGER:add_event(Event({
+                	    trigger = 'after',
+                	    delay = 0.15,
+                	    func = function()
+							play_sound('tarot2')
+                	        playing_card:juice_up(0.3, 0.3)
+                	        return true
+                	    end
+                	}))
+					delay(0.5)
+				end
+            end
+			delay(1)
+		end
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
