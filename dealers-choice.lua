@@ -351,7 +351,7 @@ SMODS.Joker {
 	cost = 3,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if not G.GAME.deacho_proxy or card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
+		if card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
 			local rank_strings = {}
         	for i = 2, SMODS.Rank.max_id.value do
         	    rank_strings[#rank_strings+1] = rank_to_string(i).."s"
@@ -374,18 +374,18 @@ SMODS.Joker {
 		}
 		return { main_start = main_start }
 	end,
+	set_ability = function(self, card, initial, delay_sprites)
+		if not G.GAME.deacho_proxy_a then G.GAME.deacho_proxy_a = {} end
+		if not G.GAME.deacho_proxy_b then G.GAME.deacho_proxy_b = {} end
+		if card.ability.extra.proxy_a == 0 then card.ability.extra.proxy_a = math.random(2, SMODS.Rank.max_id.value) end
+		if card.ability.extra.proxy_b == 0 then card.ability.extra.proxy_b = math.random(2, SMODS.Rank.max_id.value) end
+		if card.ability.extra.proxy_b == card.ability.extra.proxy_a then
+			card.ability.extra.proxy_b = card.ability.extra.proxy_b < 14 and card.ability.extra.proxy_b + 1 or 2
+		end
+	end,
 	add_to_deck = function(self, card, from_debuff)
         if not G.GAME.deacho_proxy then G.GAME.deacho_proxy = 0 end
 		G.GAME.deacho_proxy = G.GAME.deacho_proxy + 1
-		if not from_debuff then
-			if not G.GAME.deacho_proxy_a then G.GAME.deacho_proxy_a = {} end
-			if not G.GAME.deacho_proxy_b then G.GAME.deacho_proxy_b = {} end
-			card.ability.extra.proxy_a = math.random(2, SMODS.Rank.max_id.value)
-			card.ability.extra.proxy_b = math.random(2, SMODS.Rank.max_id.value)
-			if card.ability.extra.proxy_b == card.ability.extra.proxy_a then
-				card.ability.extra.proxy_b = card.ability.extra.proxy_b < 14 and card.ability.extra.proxy_b + 1 or 2
-			end
-		end
 		G.GAME.deacho_proxy_a[card.sort_id] = card.ability.extra.proxy_a
 		G.GAME.deacho_proxy_b[card.sort_id] = card.ability.extra.proxy_b
     end,
