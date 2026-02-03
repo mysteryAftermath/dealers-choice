@@ -342,10 +342,7 @@ SMODS.Joker {
 	key = 'proxy',
 	loc_txt = {
 		name = 'Proxy',
-		text = {
-			"All {C:attention}#1#s{} count",
-			"as {C:attention}#2#s{} instead",
-		}
+		text = {""}
 	},
 	config = { extra = { proxy_a = 0, proxy_b = 0 } },
 	rarity = 1,
@@ -355,9 +352,27 @@ SMODS.Joker {
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
 		if not G.GAME.deacho_proxy or card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
-			return { vars = { 'X', 'Y' } }
+			local rank_strings = {}
+        	for i = 2, SMODS.Rank.max_id.value do
+        	    rank_strings[#rank_strings+1] = rank_to_string(i).."s"
+        	end
+        	main_start = {
+        	    { n = G.UIT.T, config = { text = 'All ', colour = G.C.UI.TEXT_DARK, scale = 0.32 } },
+        	    { n = G.UIT.O, config = { object = DynaText({ string = rank_strings, colours = { G.C.FILTER }, pop_in_rate = 9999999, silent = true, random_element = true, pop_delay = 0.5, scale = 0.32, min_cycle_time = 0 }) } },
+				{ n = G.UIT.T, config = { text = ' count as ', colour = G.C.UI.TEXT_DARK, scale = 0.32 } },
+        	    { n = G.UIT.O, config = { object = DynaText({ string = rank_strings, colours = { G.C.FILTER }, pop_in_rate = 9999999, silent = true, random_element = true, pop_delay = 0.5, scale = 0.32, min_cycle_time = 0 }) } },
+				{ n = G.UIT.T, config = { text = ' instead', colour = G.C.UI.TEXT_DARK, scale = 0.32 } },
+			}
+        	return { main_start = main_start }
 		end
-		return { vars = { rank_to_string(card.ability.extra.proxy_a), rank_to_string(card.ability.extra.proxy_b) } }
+		main_start = {
+			{ n = G.UIT.T, config = { text = 'All ', colour = G.C.UI.TEXT_DARK, scale = 0.32 } },
+			{ n = G.UIT.T, config = { text = rank_to_string(card.ability.extra.proxy_a)..'s ', colour = G.C.FILTER, scale = 0.32 } },
+			{ n = G.UIT.T, config = { text = 'count as ', colour = G.C.UI.TEXT_DARK, scale = 0.32 } },
+			{ n = G.UIT.T, config = { text = rank_to_string(card.ability.extra.proxy_b)..'s ', colour = G.C.FILTER, scale = 0.32 } },
+			{ n = G.UIT.T, config = { text = 'instead', colour = G.C.UI.TEXT_DARK, scale = 0.32 } },
+		}
+		return { main_start = main_start }
 	end,
 	add_to_deck = function(self, card, from_debuff)
         if not G.GAME.deacho_proxy then G.GAME.deacho_proxy = 0 end
