@@ -400,6 +400,49 @@ SMODS.Joker {
 	end
 }
 
+--[[
+	Bellhop
+	Before scoring, draw a card for every card played.
+]]
+SMODS.Joker {
+	key = 'bellhop',
+	loc_txt = {
+		name = 'Bellhop',
+		text = {
+			"{C:attention}Before{} scoring, draw {C:attention}#1#{}",
+			"card#2# for {C:attention}every played{} card",
+		}
+	},
+	config = { extra = { cards_drawn = 1 } },
+	rarity = 1,
+	atlas = 'dealers-choice',
+	pos = { x = 8, y = 0 },
+	cost = 4,
+	blueprint_compat = true,
+	eternal_compat = false,
+	loc_vars = function(self, info_queue, card)
+		local plurality = "s"
+		if card.ability.extra.cards_drawn == 1 then
+			plurality = ""
+		end
+		return { vars = { card.ability.extra.cards_drawn, plurality } }
+	end,
+	calculate = function(self, card, context)
+		if context.press_play then
+			local bp_card = context.blueprint_card
+			G.E_MANAGER:add_event(Event({
+				delay = 0.15,
+				func = function()
+					(bp_card or card):juice_up(0.3, 0.3)
+					play_sound('tarot2')
+					return true
+				end
+			}))
+		SMODS.draw_cards(#G.hand.highlighted*card.ability.extra.cards_drawn)
+		end
+	end
+}
+
 ---- Uncommon Jokers
 
 --[[ Orange Juicer
