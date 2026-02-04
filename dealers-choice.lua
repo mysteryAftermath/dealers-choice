@@ -1045,22 +1045,13 @@ SMODS.Joker {
 		if context.after and context.scoring_hand then
 			for _, playing_card in ipairs(context.scoring_hand) do
 				if SMODS.pseudorandom_probability(card, 'deacho_gains', card.ability.extra.chance, card.ability.extra.odds) then
-					if context.blueprint then
-						G.E_MANAGER:add_event(Event({
-							func = function()
-								context.blueprint_card:juice_up()
-								return true
-							end
-						}))
-					else
-						G.E_MANAGER:add_event(Event({
-							func = function()
-								card:juice_up()
-								return true
-							end
-						}))
-					end
-
+					local bp_card = context.blueprint_card
+					G.E_MANAGER:add_event(Event({
+						func = function()
+							(bp_card or card):juice_up()
+							return true
+						end
+					}))
 					G.E_MANAGER:add_event(Event({
 						func = function()
 							playing_card:flip()
