@@ -334,6 +334,8 @@ function rank_to_string(rank)
 		return "King"
 	elseif rank == 14 then
 		return "Ace"
+	elseif rank == 0 then
+		return "X"
 	end
 	return tostring(rank)
 end
@@ -438,6 +440,49 @@ SMODS.Joker {
 				end
 			}))
 		SMODS.draw_cards(#G.hand.highlighted*card.ability.extra.cards_drawn)
+		end
+	end
+}
+
+--[[ Mesa
+	Retrigger all played #s
+	Rank changes to average rank in deck
+]]
+
+function get_average_rank_in_full_deck()
+	local avg_rank = 0
+	if G.playing_cards and #G.playing_cards > 0 then
+		for _, playing_card in ipairs(G.playing_cards) do
+			avg_rank = avg_rank + playing_card:get_id()
+		end
+		avg_rank = math.floor((avg_rank / #G.playing_cards) + 0.5)
+	end
+	return avg_rank
+end
+
+SMODS.Joker {
+	key = 'mesa',
+	loc_txt = {
+		name = 'Mesa',
+		text = {
+			"Retrigger all played {C:attention}#1#s{}",
+			"{s:0.8}Rank changes to average rank in full deck",
+		}
+	},
+	config = { extra = { repetitions = 1 } },
+	rarity = 1,
+	atlas = 'dealers-choice',
+	pos = { x = 1, y = 3 },
+	cost = 4,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { rank_to_string(get_average_rank_in_full_deck()) } }
+	end,
+	calculate = function(self, card, context)
+		if context.repetition and context.cardarea == G.play and context.other_card:get_id() == get_average_rank_in_full_deck() then
+			return {
+                repetitions = card.ability.extra.repetitions
+            }
 		end
 	end
 }
