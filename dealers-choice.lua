@@ -419,7 +419,6 @@ SMODS.Joker {
 	pos = { x = 8, y = 0 },
 	cost = 4,
 	blueprint_compat = true,
-	eternal_compat = false,
 	loc_vars = function(self, info_queue, card)
 		local plurality = "s"
 		if card.ability.extra.cards_drawn == 1 then
