@@ -679,11 +679,8 @@ SMODS.Joker {
 		if card.ability.extra.level < 4 then
 			remaining_exp = card.ability.extra.level_cost - card.ability.extra.money_tracker
 		end
-		-- Bandaid fix for changing sprite when save is loaded
-		card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
 		local level_print = ""
 		if card.ability.extra.level == 4 then
-			card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
 			level_print = "MAX"
 		else
 			level_print = tostring(card.ability.extra.level)
@@ -779,7 +776,9 @@ SMODS.Joker {
 		end
 	end,
 	add_to_deck = function(self, card, from_debuff)
+		card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
         if card.ability.extra.level == 4 then
+			card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
 			G.jokers.config.card_limit = G.jokers.config.card_limit + 1
 		end
     end,
@@ -787,6 +786,24 @@ SMODS.Joker {
         if card.ability.extra.level == 4 then
 			G.jokers.config.card_limit = G.jokers.config.card_limit - 1
 		end
+	end,
+	load = function(self, card, card_table, other_card)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
+				if card.ability.extra.level == 4 then
+					card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
+				end
+				return true
+			end
+		}))
+		--[[for k,v in card do
+			print(tostring(k)..", "..tostring(v))
+		end
+		card.children.center:set_sprite_pos({x = card.ability.extra.level, y = 2})
+		if card.ability.extra.level == 4 then
+			card.children.floating_sprite:set_sprite_pos({ x = 5, y = 2})
+		end]]
 	end
 }
 
