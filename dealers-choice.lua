@@ -353,7 +353,7 @@ SMODS.Joker {
 	cost = 3,
 	blueprint_compat = false,
 	loc_vars = function(self, info_queue, card)
-		if card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
+		if (card.area and card.area.config.type == 'title') or card.ability.extra.proxy_a == 0 or card.ability.extra.proxy_b == 0 then
 			local rank_strings = {}
         	for i = 2, SMODS.Rank.max_id.value do
         	    rank_strings[#rank_strings+1] = rank_to_string(i).."s"
