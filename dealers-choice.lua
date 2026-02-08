@@ -487,6 +487,51 @@ SMODS.Joker {
 	end
 }
 
+--[[ River
+	This Joker gains +6 Chips this
+	round per consecutive card drawn 
+	without drawing CARD
+	card changes every round
+	(Currently +0 Chips)
+]]
+SMODS.Joker {
+	key = 'river',
+	loc_txt = {
+		name = 'River',
+		text = {
+			"This Joker gains {C:chips}+#1#{} Chips this",
+			"round per consecutive card drawn",
+			"{C:attention}without{} drawing the #2# of #3#",
+			"card changes every round",
+			"{C:inactive}(Currently {C:chips}+#4#{} {C:inactive}Chips)",
+		}
+	},
+	config = { extra = { chips = 6, bonus_chips = 0 } },
+	rarity = 1,
+	atlas = 'dealers-choice',
+	pos = { x = 0, y = 0 },
+	cost = 4,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.chips, nil, nil, card.ability.extra.bonus_chips } }
+	end,
+	calculate = function(self, card, context)
+		if context.hand_drawn then
+			for k,v in ipairs(context.hand_drawn) do
+				card.ability.extra.bonus_chips = card.ability.extra.bonus_chips + card.ability.extra.chips
+			end
+		end
+		if context.joker_main then
+			return {
+				chips = card.ability.extra.bonus_chips
+			}
+		end
+		if context.end_of_round and not context.blueprint then
+			card.ability.extra.bonus_chips = 0
+		end
+	end
+}
+
 ---- Uncommon Jokers
 
 --[[ Orange Juicer
