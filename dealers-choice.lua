@@ -453,7 +453,9 @@ function get_average_rank_in_full_deck()
 	local avg_rank = 0
 	if G.playing_cards and #G.playing_cards > 0 then
 		for _, playing_card in ipairs(G.playing_cards) do
-			avg_rank = avg_rank + playing_card:get_id()
+			if playing_card:get_id() and playing_card:get_id() > 1 then
+				avg_rank = avg_rank + playing_card:get_id()
+			end
 		end
 		avg_rank = math.floor((avg_rank / #G.playing_cards) + 0.5)
 	end
