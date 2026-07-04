@@ -888,7 +888,7 @@ SMODS.Joker {
 }
 
 --[[ Sidewalk
-	Gives X0.1 chips for each unique
+	Gives X0.2 mult for each unique
 	scoring rank in the current hand
 ]]
 SMODS.Joker {
@@ -896,7 +896,7 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Sidewalk',
 		text = {
-			"Gives {X:chips,C:white}X#1#{} chips for each unique",
+			"Gives {X:mult,C:white}X#1#{} mult for each unique",
 			"scoring {C:attention}rank{} in the {C:attention}current hand{}",
 		}
 	},
@@ -905,9 +905,9 @@ SMODS.Joker {
     rarity = 2,
     blueprint_compat = true,
     cost = 5,
-    config = { extra = { xchips = 0.1, message_a = "Hop", message_b = "Skip" } },
+    config = { extra = { xmult = 0.1, message_a = "Hop", message_b = "Skip" } },
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.xchips } }
+        return { vars = { card.ability.extra.xmult } }
     end,
     calculate = function(self, card, context)
 		if context.before then
@@ -932,7 +932,7 @@ SMODS.Joker {
         end
 		if context.joker_main then
 			return {
-				xchips = 1 + G.GAME.deacho_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] * card.ability.extra.xchips
+				xmult = 1 + G.GAME.deacho_sidewalk_score[context.blueprint and context.blueprint_card.sort_id or card.sort_id] * card.ability.extra.xmult
 			}
 		end
     end,
