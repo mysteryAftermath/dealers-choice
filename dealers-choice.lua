@@ -183,6 +183,7 @@ SMODS.Joker {
 	rarity = 1,
 	atlas = 'dealers-choice',
 	pos = { x = 2, y = 1 },
+	pixel_size = { h = 67 },
 	cost = 3,
 	blueprint_compat = true,
 	eternal_compat = false,
