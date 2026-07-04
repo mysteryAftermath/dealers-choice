@@ -490,6 +490,112 @@ SMODS.Joker {
 	end
 }
 
+--[[ Ensign
+	When Blind is selected, all held planet
+	and tarot cards increase in rank by 1
+]]
+SMODS.Joker {
+	key = 'ensign',
+	loc_txt = {
+		name = 'Ensign',
+		text = {
+			"When {C:attention}Blind{} is selected, all held {C:planet}Planet{}",
+			"and {C:tarot}Tarot{} cards increase in rank by {C:attention}#1#{}",
+		}
+	},
+	config = { rank_up = 1 },
+	rarity = 1,
+	atlas = 'dealers-choice',
+	pos = { x = 7, y = 0 },
+	cost = 4,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.rank_up } }
+	end,
+	calculate = function(self, card, context)
+		if context.setting_blind then
+			for k,v in pairs(G.consumeables.cards) do
+				if v.config.center.set == "Tarot" or  v.config.center.set == "Planet" then
+					local bp_card = context.blueprint_card
+					G.E_MANAGER:add_event(Event({
+						func = function()
+							(bp_card or card):juice_up()
+							return true
+						end
+					}))
+					G.E_MANAGER:add_event(Event({
+						func = function()
+							v:flip()
+							play_sound('card1')
+							return true
+						end
+					}))
+
+					G.E_MANAGER:add_event(Event({
+                	    trigger = 'after',
+                	    delay = 0.25,
+                	    func = function()
+							if v.config.center.set == "Tarot" then ease_tarot(v) end
+							if v.config.center.set == "Planet" then ease_planet(v) end
+                	        v:flip()
+                	        v:juice_up(0.3, 0.3)
+							SMODS.calculate_effect({message = 'Rank Up!', instant = true, colour = G.C.SECONDARY_SET.Tarot}, v)
+                	        return true
+                	    end
+                	}))
+
+					G.E_MANAGER:add_event(Event({
+                	    trigger = 'after',
+                	    delay = 0.15,
+                	    func = function()
+							play_sound('tarot2')
+                	        v:juice_up(0.3, 0.3)
+                	        return true
+                	    end
+                	}))
+					delay(0.5)
+				end
+			end
+		end
+	end,
+	add_to_deck = function (self, card, from_debuff)
+		if not G.GAME.deacho_tarot_order then
+			G.GAME.deacho_tarot_order = {}
+			for k,v in pairs(G.P_CENTER_POOLS.Tarot) do
+				if G.P_CENTER_POOLS.Tarot[k+1] then
+					G.GAME.deacho_tarot_order[v.key] = G.P_CENTER_POOLS.Tarot[k+1].key
+				end
+			end
+			G.GAME.deacho_tarot_order[G.P_CENTER_POOLS.Tarot[#G.P_CENTER_POOLS.Tarot].key] = G.P_CENTER_POOLS.Tarot[1].key
+		end
+		if not G.GAME.deacho_planet_order then
+			G.GAME.deacho_planet_order = {}
+			G.GAME.deacho_planet_order['c_pluto'] = 'c_mercury'
+			for k,v in pairs(G.P_CENTER_POOLS.Planet) do
+				if G.P_CENTER_POOLS.Planet[k+1] and v.key ~= 'c_pluto' then
+					if G.P_CENTER_POOLS.Planet[k+1].key == 'c_pluto' and G.P_CENTER_POOLS.Planet[k+2] then
+						G.GAME.deacho_planet_order[v.key] = G.P_CENTER_POOLS.Planet[k+2].key
+					else
+						G.GAME.deacho_planet_order[v.key] = G.P_CENTER_POOLS.Planet[k+1].key
+					end
+				end
+			end
+			G.GAME.deacho_planet_order[G.P_CENTER_POOLS.Planet[#G.P_CENTER_POOLS.Planet].key] = 'c_pluto'
+		end
+	end
+}
+
+function ease_tarot(card)
+	card:set_ability(G.GAME.deacho_tarot_order[card.config.center_key])
+end
+
+function ease_planet(card)
+	card:set_ability(G.GAME.deacho_planet_order[card.config.center_key])
+	if not G.GAME.hands[card.config.center.config.hand_type].visible then
+		ease_planet(card)
+	end
+end
+
 ---- Uncommon Jokers
 
 --[[ Orange Juicer
