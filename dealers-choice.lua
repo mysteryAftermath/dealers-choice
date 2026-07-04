@@ -905,7 +905,7 @@ SMODS.Joker {
     rarity = 2,
     blueprint_compat = true,
     cost = 5,
-    config = { extra = { xmult = 0.1, message_a = "Hop", message_b = "Skip" } },
+    config = { extra = { xmult = 0.2, message_a = "Hop", message_b = "Skip" } },
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.xmult } }
     end,
