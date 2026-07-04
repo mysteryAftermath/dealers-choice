@@ -842,16 +842,16 @@ SMODS.Joker {
 }
 
 --[[ Lucky Sevens
-	Played Sevens either give +7 chips,
-	+7 Mult, or +$7 when scored
+	Played Sevens either give +7 Chips,
+	+$7, or +7 Mult when scored
 ]]
 SMODS.Joker {
 	key = '777',
 	loc_txt = {
 		name = 'Lucky Sevens',
 		text = {
-			"Played {C:attention}Sevens{} either give {C:chips}+#1#{} chips,",
-			"{C:mult}+#1#{} Mult or {C:money}$#1#{} when scored"
+			"Played {C:attention}Sevens{} either give {C:chips}+#1#{} Chips,",
+			"{C:money}$#1#{} or {C:mult}+#1#{} Mult when scored"
 		}
 	},
 	config = { extra = { jackpot = 7 } },
