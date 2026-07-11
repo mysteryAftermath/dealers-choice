@@ -596,6 +596,76 @@ function ease_planet(card)
 	end
 end
 
+--[[ River
+	This Joker gains +6 Chips this
+	round per consecutive card drawn 
+	without drawing CARD
+	card changes every round
+	(Currently +0 Chips)
+]]
+SMODS.Joker {
+	key = 'river',
+	loc_txt = {
+		name = 'River',
+		text = {
+			"This Joker gains {C:chips}+#1#{} Chips this",
+			"round per consecutive card drawn",
+			"{C:attention}without{} drawing the {C:attention}#2#{} of {V:1}#3#,",
+			"card changes every round",
+			"{C:inactive}(Currently {C:chips}+#4#{} {C:inactive}Chips)",
+		}
+	},
+	config = { extra = { chips = 6, bonus_chips = 0 } },
+	rarity = 1,
+	atlas = 'dealers-choice',
+	pos = { x = 0, y = 0 },
+	cost = 4,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		local river_card = G.GAME.current_round.deacho_river_card or { rank = 'Ace', suit = 'Spades' }
+        return { vars = { card.ability.extra.chips, localize(river_card.rank, 'ranks'), localize(river_card.suit, 'suits_plural'), colours = { G.C.SUITS[river_card.suit] }, card.ability.extra.bonus_chips } }
+    end,
+	calculate = function(self, card, context)
+		if context.hand_drawn then
+			for k,v in ipairs(context.hand_drawn) do
+				if v:get_id() == G.GAME.current_round.deacho_river_card.id and v:is_suit(G.GAME.current_round.deacho_river_card.suit) then
+					card.ability.extra.bonus_chips = 0
+					return {
+						message = "Reset!",
+						colour = G.C.FILTER
+					}
+				else
+					card.ability.extra.bonus_chips = card.ability.extra.bonus_chips + card.ability.extra.chips
+				end
+			end
+		end
+		if context.joker_main then
+			return {
+				chips = card.ability.extra.bonus_chips
+			}
+		end
+		if context.end_of_round and not context.blueprint then
+			card.ability.extra.bonus_chips = 0
+		end
+	end
+}
+
+local function reset_deacho_river_card()
+    G.GAME.current_round.deacho_river_card = { rank = 'Ace', suit = 'Spades' }
+    local valid_river_cards = {}
+    for _, playing_card in ipairs(G.playing_cards) do
+        if not SMODS.has_no_suit(playing_card) and not SMODS.has_no_rank(playing_card) then
+            valid_river_cards[#valid_river_cards + 1] = playing_card
+        end
+    end
+    local river_card = pseudorandom_element(valid_river_cards, 'deacho_river' .. G.GAME.round_resets.ante)
+    if river_card then
+        G.GAME.current_round.deacho_river_card.rank = river_card.base.value
+        G.GAME.current_round.deacho_river_card.suit = river_card.base.suit
+        G.GAME.current_round.deacho_river_card.id = river_card.base.id
+    end
+end
+
 ---- Uncommon Jokers
 
 --[[ Orange Juicer
@@ -1489,3 +1559,8 @@ SMODS.Joker {
 		end
 	end
 }
+
+--Global variables
+function SMODS.current_mod.reset_game_globals(run_start)
+	reset_deacho_river_card()
+end
