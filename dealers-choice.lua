@@ -527,16 +527,6 @@ SMODS.Joker {
 					}
 				else
 					card.ability.extra.bonus_chips = card.ability.extra.bonus_chips + card.ability.extra.chips
-					G.E_MANAGER:add_event(Event({
-						trigger = 'after',						
-						delay = 0.5,
-						func = function()
-							play_sound('tarot1')
-							card:juice_up(0.3, 0.5)
-							SMODS.calculate_effect({message = 'Upgrade!', instant = true, colour = G.C.Filter}, card)
-							return true
-						end
-					}))
 				end
 			end
 		end
