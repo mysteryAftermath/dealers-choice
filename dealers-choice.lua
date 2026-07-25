@@ -618,7 +618,7 @@ SMODS.Joker {
 	config = { extra = { chips = 6, bonus_chips = 0 } },
 	rarity = 1,
 	atlas = 'dealers-choice',
-	pos = { x = 0, y = 0 },
+	pos = { x = 2, y = 3 },
 	cost = 4,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
