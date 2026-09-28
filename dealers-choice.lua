@@ -1401,7 +1401,7 @@ SMODS.Joker {
 	config = { extra = { }, },
 	rarity = 2,
 	atlas = 'dealers-choice',
-	pos = { x = 3, y = 1 },
+	pos = { x = 2, y = 3 },
 	cost = 5,
 	blueprint_compat = true,
 	loc_vars = function(self, info_queue, card)
