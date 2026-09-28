@@ -1372,6 +1372,46 @@ SMODS.Joker {
 	end
 }
 
+--[[ Multitool
+	Effect is unique to current deck:
+	Red+Blue: +2 hand size
+	Green: +1 Hand and +1 Discard every round
+	Yellow: +1 Card slot available in shop
+	Black: 1 in 2 chance for jokers to scale twice
+	Magic: when using a tarot card, 1 in 3 chance to give a copy of that tarot card.
+	Nebula: Replicates the effect of observatory (stacks with observatory)
+	Ghost: Jokers can no longer be destroyed by Spectral card effects. (Or prevent all downsides of spectral cards?)
+	Abandoned: Gains +25 chips per face card destroyed
+	Checkered Deck: Cards in standard packs are always spades/hearts
+	Zodiac: Creates a Judgement card when using a Tarot or Planet card (must have room)
+	Painted: +6 Mult for each enhanced card held in hand
+	Anaglyph: gives +1x Mult per Skip tag held (excludes double tags)
+	Plasma: Gains .1x Chips per hand played.
+	Erratic: Restocks booster packs when rerolling a shop
+]]
+
+SMODS.Joker {
+	key = 'multitool',
+	loc_txt = {
+		name = 'Multitool',
+		text = {
+			"#1#"
+		}
+	},
+	config = { extra = { }, },
+	rarity = 2,
+	atlas = 'dealers-choice',
+	pos = { x = 3, y = 1 },
+	cost = 5,
+	blueprint_compat = true,
+	loc_vars = function(self, info_queue, card)
+		return { vars = { } }
+	end,
+	calculate = function(self, card, context)
+		
+	end
+}
+
 ---- Rare Jokers
 
 --[[ Turnabout
