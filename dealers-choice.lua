@@ -1434,18 +1434,14 @@ SMODS.Joker {
 	add_to_deck = function (self, card, from_debuff)
 		card.ability.extra.tool = G.GAME.selected_back.name
 		if card.ability.extra.tool == "Red Deck" then
-			print("Playing Red Deck")
 			G.hand:change_size(card.ability.tools[card.ability.extra.tool].h_size)
 			return
 		elseif card.ability.extra.tool == "Blue Deck" then
-			print("Playing Blue Deck")
 			G.hand:change_size(card.ability.tools[card.ability.extra.tool].h_size)
 			return
 		elseif card.ability.extra.tool == "Yellow Deck" then 
-			print("Playing Yellow Deck")
 			change_shop_size(card.ability.tools[card.ability.extra.tool].shop_size)
 		elseif card.ability.extra.tool == "Green Deck" then
-			print("Playing Green Deck")
 			G.GAME.round_resets.hands = G.GAME.round_resets.hands + card.ability.tools[card.ability.extra.tool].hands
 
 			G.GAME.round_resets.discards = G.GAME.round_resets.discards + card.ability.tools[card.ability.extra.tool].d_size
